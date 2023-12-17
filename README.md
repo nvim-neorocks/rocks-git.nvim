@@ -52,7 +52,7 @@ neorg = { git = "nvim-neorg/neorg" }
 
 ## :pencil: Requirements
 
-- `rocks.nvim >= 2.4.0` 
+- `rocks.nvim >= 2.4.1` 
 - The `git` command line utility.
 
 ## :hammer: Installation

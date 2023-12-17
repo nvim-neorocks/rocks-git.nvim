@@ -5,8 +5,6 @@ on:
     tags:
       - '*'
   release:
-    types:
-      - created
   pull_request:
   workflow_dispatch:
 
@@ -26,6 +24,6 @@ jobs:
         with:
           version: ${{ env.LUAROCKS_VERSION }}
           dependencies: |
-            rocks.nvim >= 2.4.0
+            rocks.nvim >= 2.4.1
           labels: |
             neovim
