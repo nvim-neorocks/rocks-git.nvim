@@ -83,7 +83,7 @@ end
 function operations.sync(report_progress, report_error, pkg)
     if pkg.rev then
         local rev = git.get_rev(pkg)
-        if rev == pkg.rev then
+        if rev ~= pkg.rev then
             return
         else
             report_progress(("rocks-git: Scyncing %s"):format(pkg.name))
@@ -95,17 +95,21 @@ function operations.sync(report_progress, report_error, pkg)
             if sc.code ~= 0 then
                 report_error(("Failed to checkout %s"):format(pkg.rev))
             end
+            local ok = build_if_required(report_progress, report_error, pkg)
+            if ok then
+                report_progress(("rocks-git: Synced %s"):format(pkg.name))
+            end
         end
     else
         local sc = git.pull(pkg):wait()
         report_progress(("rocks-git: Updating %s"):format(pkg.name))
         if sc.code ~= 0 then
-            report_error(("rocks-git: Failed to update %s"):format(pkg.name))
+            report_error(("rocks-git: Failed to pull %s"):format(pkg.name))
         end
-    end
-    local ok = build_if_required(report_progress, report_error, pkg)
-    if ok then
-        report_progress(("rocks-git: Installed %s"):format(pkg.name))
+        local ok = build_if_required(report_progress, report_error, pkg)
+        if ok then
+            report_progress(("rocks-git: Updated %s"):format(pkg.name))
+        end
     end
 end
 
