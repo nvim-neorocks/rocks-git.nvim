@@ -89,7 +89,13 @@ function rocks_git.get_prune_callback(user_rocks)
             while handle do
                 local name, type = vim.uv.fs_scandir_next(handle)
                 if type == "directory" then
-                    if not user_rocks[name] then
+                    local user_rock = user_rocks[name]
+                    ---@cast user_rock PackageSpec
+                    if
+                        not user_rock
+                        or user_rock.opt == true and packdir == "start"
+                        or not user_rock.opt and packdir == "opt"
+                    then
                         local dir = vim.fs.joinpath(path, name)
                         report_progress(("rocks-git: Removing %s"):format(name))
                         local ok = operations.prune(dir)
