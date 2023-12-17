@@ -1,0 +1,41 @@
+==============================================================================
+Table of Contents                                           *rocks-git.contents*
+
+rocks-git.nvim ····················································· |rocks-git|
+
+==============================================================================
+rocks-git.nvim                                                       *rocks-git*
+
+
+Adds the ability to manage plugins from git to rocks.nvim!
+
+This plugin hooks into the `:Rocks sync` command.
+
+Note: ~
+   There is no SemVer support!
+
+An entry in the rocks.toml configuration file
+can be extended to match the `PackageSpec` type.
+
+
+PackageSpec : RockSpec                                             *PackageSpec*
+
+    Fields: ~
+        {name}     (string)   Name of the plugin.
+        {git}      (string)   Git short name, e.g. 'nvim-neorocks/rocks-git.nvim', or a git URL.
+        {opt?}     (boolean)  If 'true', will not be loaded on startup. Can be loaded manually with `:packadd!`.
+        {rev?}     (string)   Git revision or tag to checkout.
+        {branch?}  (string)   Git branch to checkout.
+        {build?}   (string)   Shell or Vimscript command to run after install/update. Will run a vim command if prefixed with ':'.
+
+
+
+When calling `:Rocks sync`, this plugin will
+
+  - Install missing plugins in |packpath| directories.
+  - Ensure `rev` is checked out, if one is specified.
+  - Update existing plugins if no `rev` is specified.
+  - Run any `build` commands (after installing or updating).
+
+
+vim:tw=78:ts=8:noet:ft=help:norl:
