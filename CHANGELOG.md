@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.0.0...v1.0.1) (2023-12-17)
+
+
+### Bug Fixes
+
+* **deps:** bump rocks.nvim min version to non-broken version ([7e41cdb](https://github.com/nvim-neorocks/rocks-git.nvim/commit/7e41cdbca334267d6bbab29ddccd3ba174271e59))
+
 ## 1.0.0 (2023-12-17)
 
 
