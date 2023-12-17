@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.0.3...v1.1.0) (2023-12-17)
+
+
+### Features
+
+* **prune:** better messages when moving between 'opt'/'start' ([bb1cca9](https://github.com/nvim-neorocks/rocks-git.nvim/commit/bb1cca9df3f366866f16a035f0bd369b13d1d9ac))
+
+
+### Bug Fixes
+
+* **sync:** inverted `rev` equality check ([6e8d64f](https://github.com/nvim-neorocks/rocks-git.nvim/commit/6e8d64f51d19d8a90c98b33f8dfeced3bd742119))
+
 ## [1.0.3](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.0.2...v1.0.3) (2023-12-17)
 
 
