@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.0.2...v1.0.3) (2023-12-17)
+
+
+### Bug Fixes
+
+* **operations:** wrong progress messages ([c944980](https://github.com/nvim-neorocks/rocks-git.nvim/commit/c944980ea387220ec878098b273bef90092033fb))
+
 ## [1.0.2](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.0.1...v1.0.2) (2023-12-17)
 
 
