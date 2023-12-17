@@ -83,7 +83,7 @@ end
 function operations.sync(report_progress, report_error, pkg)
     if pkg.rev then
         local rev = git.get_rev(pkg)
-        if rev ~= pkg.rev then
+        if rev == pkg.rev then
             return
         else
             report_progress(("rocks-git: Scyncing %s"):format(pkg.name))
