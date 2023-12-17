@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.0.1...v1.0.2) (2023-12-17)
+
+
+### Bug Fixes
+
+* **prune:** remove mismatched `opt`/`start` plugins ([4f06886](https://github.com/nvim-neorocks/rocks-git.nvim/commit/4f06886adf6a79f49b035ec530c9bc9becb13fdc))
+
 ## [1.0.1](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.0.0...v1.0.1) (2023-12-17)
 
 
