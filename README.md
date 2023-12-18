@@ -86,5 +86,5 @@ Git commands and error logs will show up in `:Rocks log`.
 Contributions are more than welcome!
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for a guide.
 
-[luarocks-shield]: https://img.shields.io/luarocks/v/nvim-neorocks/rocks-git.nvim?logo=lua&color=purple&style=for-the-badge
-[luarocks-url]: https://luarocks.org/modules/nvim-neorocks/rocks-git.nvim
+[luarocks-shield]: https://img.shields.io/luarocks/v/neorocks/rocks-git.nvim?logo=lua&color=purple&style=for-the-badge
+[luarocks-url]: https://luarocks.org/modules/neorocks/rocks-git.nvim
