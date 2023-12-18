@@ -17,7 +17,7 @@
   </p>
   <p>
     <strong>
-      Use <a href="https://github.com/nvim-nneorocks/rocks.nvim/">rocks.nvim</a> to install plugins from git!
+      Use <a href="https://github.com/nvim-neorocks/rocks.nvim/">rocks.nvim</a> to install plugins from git!
     </strong>
   </p>
 </div>
