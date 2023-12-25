@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.1.0...v1.1.1) (2023-12-25)
+
+
+### Bug Fixes
+
+* prevent plugin from being sourced more than once ([08dc786](https://github.com/nvim-neorocks/rocks-git.nvim/commit/08dc786d6e415cdc6fe07f17a2c8506104f762fe))
+
 ## [1.1.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.0.3...v1.1.0) (2023-12-17)
 
 
