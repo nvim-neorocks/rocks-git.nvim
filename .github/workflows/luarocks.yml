@@ -27,5 +27,6 @@ jobs:
           version: ${{ env.LUAROCKS_VERSION }}
           dependencies: |
             rocks.nvim >= 2.4.1
+            nvim-nio
           labels: |
             neovim

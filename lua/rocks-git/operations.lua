@@ -19,11 +19,13 @@ local operations = {}
 
 local git = require("rocks-git.git")
 local log = require("rocks.log")
+local nio = require("nio")
 
 ---@param report_progress fun(message: string)
 ---@param report_error fun(message: string)
 ---@param pkg Package
 ---@return boolean success
+---@async
 local function build_if_required(report_progress, report_error, pkg)
     if not pkg.build then
         return true
@@ -43,9 +45,18 @@ local function build_if_required(report_progress, report_error, pkg)
             table.insert(cmd, word)
         end
         log.info(cmd)
-        local sc = vim.system(cmd, { cwd = pkg.dir }):wait()
-        if sc.code ~= 0 then
-            log.error(sc.stderr)
+        local future = nio.control.future()
+        vim.system(cmd, { cwd = pkg.dir }, function(sc)
+            ---@cast sc vim.SystemCompleted
+            if sc.code == 0 then
+                future.set(true)
+            else
+                log.error(sc.stderr)
+                future.set_error(sc.stderr)
+            end
+        end)
+        local ok = pcall(future.wait)
+        if not ok then
             report_error(("Failed to build %s"):format(pkg.name))
             return false
         end
@@ -53,65 +64,62 @@ local function build_if_required(report_progress, report_error, pkg)
     return true
 end
 
----@param report_progress fun(message: string)
----@param report_error fun(message: string)
----@param pkg Package
-function operations.install(report_progress, report_error, pkg)
+---@type async fun(report_progress: fun(message: string), report_error: fun(message: string), pkg: Package)
+operations.install = nio.create(function(report_progress, report_error, pkg)
     report_progress(("rocks-git: Installing %s"):format(pkg.name))
-    local sc = git.clone(pkg):wait() -- TODO: Use nio to support async wait?
-    if sc.code ~= 0 then
-        log.error(sc.stderr)
+    local future = git.clone(pkg)
+    local ok = pcall(future.wait)
+    if not ok then
         report_error(("Failed to clone %s"):format(pkg.url))
     end
-    local so = git.checkout(pkg)
-    if so then
-        sc = so:wait()
-        if sc.code ~= 0 then
-            log.error(sc.stderr)
+    local futureOpt = git.checkout(pkg)
+    if futureOpt then
+        ok = pcall(futureOpt.wait)
+        if not ok then
             report_error(("Failed to checkout %s"):format(pkg.rev))
         end
     end
-    local ok = build_if_required(report_progress, report_error, pkg)
+    ok = build_if_required(report_progress, report_error, pkg)
     if ok then
         report_progress(("rocks-git: Installed %s"):format(pkg.name))
     end
-end
+end, 3)
 
----@param report_progress fun(message: string)
----@param report_error fun(message: string)
----@param pkg Package
-function operations.sync(report_progress, report_error, pkg)
+---@type async fun(report_progress: fun(message: string), report_error: fun(message: string), pkg: Package)
+operations.sync = nio.create(function(report_progress, report_error, pkg)
     if pkg.rev then
         local rev = git.get_rev(pkg)
         if rev == pkg.rev then
             return
         else
             report_progress(("rocks-git: Scyncing %s"):format(pkg.name))
-            local sc = git.fetch(pkg):wait()
-            if sc.code ~= 0 then
-                log.warn(sc.stderr)
+            local future = git.fetch(pkg)
+            local ok = pcall(future.wait)
+            if not ok then
+                log.warn("Error while fetching package updates during sync")
             end
-            sc = git.checkout(pkg):wait()
-            if sc.code ~= 0 then
+            local futureOpt = git.checkout(pkg)
+            if futureOpt and not pcall(futureOpt.wait) then
                 report_error(("Failed to checkout %s"):format(pkg.rev))
             end
-            local ok = build_if_required(report_progress, report_error, pkg)
+            ok = build_if_required(report_progress, report_error, pkg)
             if ok then
                 report_progress(("rocks-git: Synced %s"):format(pkg.name))
             end
         end
     else
-        local sc = git.pull(pkg):wait()
         report_progress(("rocks-git: Updating %s"):format(pkg.name))
-        if sc.code ~= 0 then
+        local future = git.pull(pkg)
+        local ok = pcall(future.wait)
+        if not ok then
             report_error(("rocks-git: Failed to pull %s"):format(pkg.name))
         end
-        local ok = build_if_required(report_progress, report_error, pkg)
+        ok = build_if_required(report_progress, report_error, pkg)
         if ok then
             report_progress(("rocks-git: Updated %s"):format(pkg.name))
         end
     end
-end
+end, 3)
 
 ---@param dir string
 ---@return fun(_:any, path:string):(name: string, type: string)

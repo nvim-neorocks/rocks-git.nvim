@@ -29,6 +29,7 @@ local rocks_git = {}
 
 local operations = require("rocks-git.operations")
 local config = require("rocks-git.config.internal")
+local nio = require("nio")
 
 ---@class PackageSpec: RockSpec
 ---@field name string Name of the plugin.
@@ -56,13 +57,13 @@ local config = require("rocks-git.config.internal")
 
 ---@package
 ---@param spec RockSpec
----@return fun(report_progress: fun(message: string), report_error: fun(message: string)) | nil
+---@return async fun(report_progress: fun(message: string), report_error: fun(message: string)) | nil
 function rocks_git.get_sync_callback(spec)
     if not spec.git then
         return
     end
     ---@cast spec PackageSpec
-    return function(report_progress, report_error)
+    return nio.create(function(report_progress, report_error)
         ---@type Package
         local pkg = vim.tbl_deep_extend("keep", {
             url = (spec.git:match("^https?://") or spec.git:match("^git@")) and spec.git
@@ -75,7 +76,7 @@ function rocks_git.get_sync_callback(spec)
             return
         end
         operations.sync(report_progress, report_error, pkg)
-    end
+    end, 2)
 end
 
 ---@package
