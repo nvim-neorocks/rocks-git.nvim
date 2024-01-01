@@ -36,7 +36,7 @@ local function build_if_required(report_progress, report_error, pkg)
         local ok, err = pcall(vim.cmd, pkg.build)
         if not ok then
             log.error(err)
-            report_error(("Failed to build %s"):format(pkg.name))
+            report_error(("rocks-git: Failed to build %s"):format(pkg.name))
             return false
         end
     else
@@ -57,7 +57,7 @@ local function build_if_required(report_progress, report_error, pkg)
         end)
         local ok = pcall(future.wait)
         if not ok then
-            report_error(("Failed to build %s"):format(pkg.name))
+            report_error(("rocks-git: Failed to build %s"):format(pkg.name))
             return false
         end
     end
@@ -70,13 +70,13 @@ operations.install = nio.create(function(report_progress, report_error, pkg)
     local future = git.clone(pkg)
     local ok = pcall(future.wait)
     if not ok then
-        report_error(("Failed to clone %s"):format(pkg.url))
+        report_error(("rocks-git: Failed to clone %s"):format(pkg.url))
     end
     local futureOpt = git.checkout(pkg)
     if futureOpt then
         ok = pcall(futureOpt.wait)
         if not ok then
-            report_error(("Failed to checkout %s"):format(pkg.rev))
+            report_error(("rocks-git: Failed to checkout %s"):format(pkg.rev))
         end
     end
     ok = build_if_required(report_progress, report_error, pkg)
@@ -96,11 +96,11 @@ operations.sync = nio.create(function(report_progress, report_error, pkg)
             local future = git.fetch(pkg)
             local ok = pcall(future.wait)
             if not ok then
-                log.warn("Error while fetching package updates during sync")
+                log.warn("rocks-git: Error while fetching package updates during sync")
             end
             local futureOpt = git.checkout(pkg)
             if futureOpt and not pcall(futureOpt.wait) then
-                report_error(("Failed to checkout %s"):format(pkg.rev))
+                report_error(("rocks-git: Failed to checkout %s"):format(pkg.rev))
             end
             ok = build_if_required(report_progress, report_error, pkg)
             if ok then
@@ -109,6 +109,15 @@ operations.sync = nio.create(function(report_progress, report_error, pkg)
         end
     else
         report_progress(("rocks-git: Updating %s"):format(pkg.name))
+        local head_branch = git.get_head_branch(pkg)
+        local rev = git.get_rev(pkg)
+        if head_branch ~= rev then
+            pkg.rev = head_branch
+            local futureOpt = git.checkout(pkg)
+            if futureOpt and not pcall(futureOpt.wait) then
+                report_error(("rocks-git: Failed to checkout %s"):format(pkg.rev))
+            end
+        end
         local future = git.pull(pkg)
         local ok = pcall(future.wait)
         if not ok then
