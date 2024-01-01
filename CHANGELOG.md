@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.2.0...v1.2.1) (2024-01-01)
+
+
+### Bug Fixes
+
+* **sync:** checkout remote HEAD if not checked out and no rev is set ([#11](https://github.com/nvim-neorocks/rocks-git.nvim/issues/11)) ([ec3da19](https://github.com/nvim-neorocks/rocks-git.nvim/commit/ec3da19f449d3a0d18b01d58682213fd88edaf23))
+
 ## [1.2.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.1.1...v1.2.0) (2024-01-01)
 
 
