@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.1.1...v1.2.0) (2024-01-01)
+
+
+### Features
+
+* async git operations with `nvim-nio` ([#9](https://github.com/nvim-neorocks/rocks-git.nvim/issues/9)) ([2a46f54](https://github.com/nvim-neorocks/rocks-git.nvim/commit/2a46f549ff9b7742dece161f62a5edf0ec400b6d))
+
 ## [1.1.1](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.1.0...v1.1.1) (2023-12-25)
 
 
