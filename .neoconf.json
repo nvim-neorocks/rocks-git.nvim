@@ -3,8 +3,8 @@
     "library": {
       "enabled": true,
       "plugins": [
-        "fidget.nvim",
-        "nui.nvim",
+        "nvim-nio",
+        "rocks.nvim",
       ]
     }
   },
