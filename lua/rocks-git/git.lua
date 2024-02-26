@@ -22,7 +22,7 @@ local nio = require("nio")
 
 ---@param args string[] git CLI arguments
 ---@param on_exit fun(sc: vim.SystemCompleted)|nil Called asynchronously when the git command exits.
----@param opts? SystemOpts
+---@param opts? vim.SystemOpts
 ---@return vim.SystemObj
 ---@see vim.system
 local function git_cli(args, on_exit, opts)
@@ -37,7 +37,7 @@ end
 ---Clones the package.
 ---@param pkg Package
 ---@param on_exit fun(sc: vim.SystemCompleted)|nil Called asynchronously when the git command exits.
----@param opts? SystemOpts
+---@param opts? vim.SystemOpts
 ---@return vim.SystemObj
 ---@see vim.system
 local function clone(pkg, on_exit, opts)
