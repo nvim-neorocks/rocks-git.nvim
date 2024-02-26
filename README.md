@@ -69,9 +69,23 @@ and you are good to go!
 - Instead of specifying a `version`, you specify `git = "<owner>/<repo>"`.
 - Run `:Rocks sync` to synchronize the state of plugins with rocks.toml.
 
+### Configuration options
+
+The following fields can be set in a `rocks.toml` entry
+that is managed by this plugin:
+
+| Field    | Type      | Required?             | Description                                                                                          |
+|:--       |:--        |:--                    |:--                                                                                                   |
+| `name`   | `string`  | Yes                   | Name of the plugin                                                                                   |
+| `git`    | `string`  | Yes                   | Git short name, e.g. `"nvim-neorocks/rocks-git.nvim"` or a git URL                                   |
+| `opt`    | `boolean` | No (default: `false`) | Plugins with `opt = true` will not be loaded on startup. See `:h packadd`                            |
+| `rev`    | `string`  | No                    | Git revision or tag to checkout                                                                      |
+| `branch` | `string`  | No                    | Git branch to checkout                                                                               |
+| `build`  | `string`  | No                    | Shell or Vimscript command to run after install/update. Will run a vim command if prefixed with `:`  |
+
 > [!TIP]
 >
-> See [`:h rocks-git`](./doc/rocks-git.txt) for a full list of supported options.
+> See also [`:h rocks-git`](./doc/rocks-git.txt).
 
 ## :stethoscope: Troubleshooting
 
