@@ -18,6 +18,7 @@
 local git = {}
 
 local log = require("rocks.log")
+local parser = require("rocks-git.parser")
 local nio = require("nio")
 
 ---@param args string[] git CLI arguments
@@ -59,7 +60,7 @@ function git.clone(pkg)
         if sc.code == 0 then
             future.set(true)
         else
-            log.error(sc.stderr)
+            log.error(sc)
             future.set_error(sc.stderr)
         end
     end)
@@ -91,7 +92,7 @@ function git.checkout(pkg)
         if sc.code == 0 then
             future.set(true)
         else
-            log.error(sc.stderr)
+            log.error(sc)
             future.set_error(sc.stderr)
         end
     end)
@@ -121,7 +122,7 @@ function git.fetch(pkg)
         if sc.code == 0 then
             future.set(true)
         else
-            log.error(sc.stderr)
+            log.error(sc)
             future.set_error(sc.stderr)
         end
     end)
@@ -150,7 +151,7 @@ function git.pull(pkg)
         if sc.code == 0 then
             future.set(true)
         else
-            log.error(sc.stderr)
+            log.error(sc)
             future.set_error(sc.stderr)
         end
     end)
@@ -192,5 +193,66 @@ function git.get_head_branch(pkg)
     remote_head_ref = remote_head_ref:gsub("ref: refs/remotes/origin/", "")
     return remote_head_ref
 end
+
+---@param url string
+---@param on_exit fun(sc: vim.SystemCompleted)|nil Called asynchronously when the git command exits.
+local function get_latest_remote_version_tag(url, on_exit)
+    local args = { "ls-remote", "--tags", url }
+    return git_cli(args, on_exit)
+end
+
+---@alias tag_version_tuple { [1]: string?, [2]: Version?}
+
+---@param url string
+---@return nio.control.Future
+function git.get_latest_remote_semver_tag(url)
+    local future = nio.control.future()
+    get_latest_remote_version_tag(url, function(sc)
+        ---@cast sc vim.SystemCompleted
+        if sc.code == 0 then
+            local latest_tag, latest_version = parser.parse_git_latest_semver_tag(sc.stdout or "")
+            if latest_tag and latest_version then
+                future.set({ latest_tag, latest_version })
+            else
+                log.warn("Could not parse latest tag from: " .. sc.stdout)
+                future.set({})
+            end
+        else
+            log.warn(sc.stderr)
+            future.set({})
+        end
+    end)
+    return future
+end
+
+---@type async fun(pkg: Package):boolean
+git.is_outdated = nio.create(function(pkg)
+    ---@cast pkg Package
+    local future = nio.control.future()
+    if not pkg.rev then
+        git_cli({ "status", "--untracked-files=no" }, function(sc)
+            if sc.code ~= 0 then
+                log.error(sc)
+                future.set(false)
+            else
+                future.set(sc.stdout:match("Your branch is up to date") == nil)
+            end
+        end, { cwd = pkg.dir })
+        return future.wait()
+    end
+    local is_semver, version = pcall(vim.version.parse, pkg.rev)
+    if is_semver and version then
+        local version_tuple = git.get_latest_remote_semver_tag(pkg.url).wait()
+        ---@cast version_tuple tag_version_tuple
+        local latest_version = version_tuple[2]
+        if not latest_version then
+            log.error(("rocks-git: could not determine latest version for %s"):format(vim.inspect(pkg)))
+            return false
+        end
+        return version:__lt(latest_version)
+    end
+    log.info(("rocks-git: rev is not semver. Cannot determine if outdated: %s"):format(vim.inspect(pkg)))
+    return false
+end, 1)
 
 return git

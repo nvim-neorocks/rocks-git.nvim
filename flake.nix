@@ -13,6 +13,8 @@
 
     gen-luarc.url = "github:mrcjkb/nix-gen-luarc-json";
 
+    rocks-nvim-input.url = "github:nvim-neorocks/rocks.nvim";
+
     flake-parts.url = "github:hercules-ci/flake-parts";
 
     pre-commit-hooks = {
@@ -26,6 +28,7 @@
     nixpkgs,
     neorocks,
     gen-luarc,
+    rocks-nvim-input,
     flake-parts,
     pre-commit-hooks,
     ...
@@ -58,6 +61,7 @@
             plugin-overlay
             neorocks.overlays.default
             gen-luarc.overlays.default
+            rocks-nvim-input.overlays.default
             test-overlay
           ];
         };
@@ -68,6 +72,10 @@
           plugins = with pkgs.lua51Packages; [
             rocks-nvim
             nvim-nio
+          ];
+          disabled-diagnostics = [
+            # caused by a nio luaCATS bug
+            "redundant-return-value"
           ];
         };
 
@@ -91,20 +99,22 @@
           };
         };
 
-        devShell = pkgs.mkShell {
+        devShell = pkgs.integration-nightly.overrideAttrs (oa: {
           name = "rocks-git.nvim devShell";
           shellHook = ''
             ${pre-commit-check.shellHook}
             ln -fs ${pkgs.luarc-to-json luarc} .luarc.json
           '';
-          buildInputs = with pre-commit-hooks.packages.${system}; [
-            alejandra
-            lua-language-server
-            stylua
-            luacheck
-            editorconfig-checker
-          ];
-        };
+          buildInputs = with pre-commit-hooks.packages.${system};
+            [
+              alejandra
+              lua-language-server
+              stylua
+              luacheck
+              editorconfig-checker
+            ]
+            ++ oa.buildInputs;
+        });
       in {
         devShells = {
           default = devShell;
@@ -127,6 +137,7 @@
             pre-commit-check
             type-check-nightly
             ;
+          inherit (pkgs) integration-nightly;
         };
       };
       flake = {
