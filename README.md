@@ -69,7 +69,7 @@ and you are good to go!
 - Instead of specifying a `version`, you specify `git = "<owner>/<repo>"`.
 - Run `:Rocks sync` to synchronize the state of plugins with rocks.toml.
 
-> [!Note]
+> [!TIP]
 >
 > See [`:h rocks-git`](./doc/rocks-git.txt) for a full list of supported options.
 
