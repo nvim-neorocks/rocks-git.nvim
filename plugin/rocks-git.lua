@@ -7,5 +7,7 @@ local rocks_git = require("rocks-git")
 rocks.register_rock_handler({
     get_sync_callback = rocks_git.get_sync_callback,
     get_prune_callback = rocks_git.get_prune_callback,
+    get_install_callback = rocks_git.get_install_callback,
+    get_update_callbacks = rocks_git.get_update_callbacks,
 })
 vim.g.did_load_rocks_git_nvim = true

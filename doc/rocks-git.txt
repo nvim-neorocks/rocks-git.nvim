@@ -2,6 +2,7 @@
 Table of Contents                                           *rocks-git.contents*
 
 rocks-git.nvim ····················································· |rocks-git|
+ ···························································· |rocks-git.config|
 
 ==============================================================================
 rocks-git.nvim                                                       *rocks-git*
@@ -9,13 +10,19 @@ rocks-git.nvim                                                       *rocks-git*
 
 Adds the ability to manage plugins from git to rocks.nvim!
 
-This plugin hooks into the `:Rocks sync` command.
-
-Note: ~
-   There is no SemVer support!
+This plugin hooks into the `:Rocks {install|update|sync|prune}` commands.
 
 An entry in the rocks.toml configuration file
 can be extended to match the `PackageSpec` type.
+
+The `:Rocks install {plugin} {args?}` command is extended by this module as follows:
+
+Arguments:
+
+ - `plugin`: The plugin, e.g. `owner/repo` or a git HTTPS/SSH URL.
+ - `args`: (optional) `key=value` pairs, see [Configuration options](#configuration-options).
+
+
 
 
 PackageSpec : RockSpec                                             *PackageSpec*
@@ -36,6 +43,23 @@ When calling `:Rocks sync`, this plugin will
   - Ensure `rev` is checked out, if one is specified.
   - Update existing plugins if no `rev` is specified.
   - Run any `build` commands (after installing or updating).
+
+
+==============================================================================
+                                                              *rocks-git.config*
+
+
+rocks-git can be configured by adding a `[rocks-git]` table
+to your rocks.toml.
+
+See the |RocksGitConfig| type for configuration options.
+
+
+RocksGitConfig                                                  *RocksGitConfig*
+
+    Fields: ~
+        {path}        (string)  Where to install git plugins (see |packages|)
+        {url_format}  (string)  Git URL format (Lua format string)
 
 
 vim:tw=78:ts=8:noet:ft=help:norl:

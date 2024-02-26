@@ -31,8 +31,8 @@
 with the ability to install plugins into `packpath` directories ([`:h packages`](https://neovim.io/doc/user/repeat.html#packages))
 from git repositories.
 
-It does so by hooking into the `:Rocks sync` command,
-and allowing you to add `plugins` entries to your `rocks.toml` as follows:
+It does so by hooking into the `:Rocks {install|update|sync|prune}` commands,
+allowing you to add `plugins` entries to your `rocks.toml` as follows:
 
 ```toml
 [plugins.neorg]
@@ -54,7 +54,7 @@ neorg = { git = "nvim-neorg/neorg" }
 
 ## :pencil: Requirements
 
-- `rocks.nvim >= 2.4.1` 
+- `rocks.nvim >= 2.12.0`
 - The `git` command line utility.
 
 ## :hammer: Installation
@@ -64,10 +64,18 @@ and you are good to go!
 
 ## :books: Usage
 
-- Run `:Rocks edit` to open the `rocks.toml` configuration file.
-- Add or remove plugins.
-- Instead of specifying a `version`, you specify `git = "<owner>/<repo>"`.
-- Run `:Rocks sync` to synchronize the state of plugins with rocks.toml.
+You can use the same `:Rocks {install|update|sync|prune}` commands as you would
+use to install rocks with `rocks.nvim`.
+
+The only difference is the `:Rocks install {plugin} {args?}` command.
+
+Arguments:
+
+- `plugin`: The plugin, e.g. `owner/repo` or a git HTTPS/SSH URL.
+- `args`: (optional) `key=value` pairs, see [Configuration options](#configuration-options).
+
+If a plugin is not pinned to a revision or tag with the `rev` field,
+`:Rocks sync` will always update it to the latest remote revision.
 
 ### Configuration options
 

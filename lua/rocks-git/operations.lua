@@ -1,4 +1,4 @@
----@mod rocks.operations
+---@mod rocks-git.operations
 ---
 ---@brief [[
 ---
@@ -64,25 +64,65 @@ local function build_if_required(report_progress, report_error, pkg)
     return true
 end
 
----@type async fun(report_progress: fun(message: string), report_error: fun(message: string), pkg: Package)
+---@type async fun(report_progress: fun(message: string), report_error: fun(message: string), pkg: Package): boolean
 operations.install = nio.create(function(report_progress, report_error, pkg)
-    report_progress(("rocks-git: Installing %s"):format(pkg.name))
+    if pkg.rev then
+        report_progress(("rocks-git: %s -> %s"):format(pkg.name, pkg.rev))
+    else
+        report_progress(("rocks-git: %s"):format(pkg.name))
+    end
     local future = git.clone(pkg)
     local ok = pcall(future.wait)
     if not ok then
         report_error(("rocks-git: Failed to clone %s"):format(pkg.url))
+        return false
     end
     local futureOpt = git.checkout(pkg)
     if futureOpt then
         ok = pcall(futureOpt.wait)
         if not ok then
             report_error(("rocks-git: Failed to checkout %s"):format(pkg.rev))
+            return false
         end
     end
     ok = build_if_required(report_progress, report_error, pkg)
     if ok then
-        report_progress(("rocks-git: Installed %s"):format(pkg.name))
+        if pkg.rev then
+            report_progress(("rocks-git: Installed %s -> %s"):format(pkg.name, pkg.rev))
+        else
+            report_progress(("rocks-git: Installed %s"):format(pkg.name))
+        end
+        return true
     end
+    return false
+end, 3)
+
+---@type async fun(report_progress: fun(message: string), report_error: fun(message: string), pkg: Package)
+local update_pull = nio.create(function(report_progress, report_error, pkg)
+    local future = git.pull(pkg)
+    local ok = pcall(future.wait)
+    if not ok then
+        report_error(("rocks-git: Failed to pull %s"):format(pkg.name))
+    end
+    ok = build_if_required(report_progress, report_error, pkg)
+    if ok then
+        report_progress(("rocks-git: Updated %s (unpinned)"):format(pkg.name))
+    end
+end, 3)
+
+---@type async fun(report_progress: fun(message: string), report_error: fun(message: string), pkg: Package)
+local update_to_rev = nio.create(function(report_progress, report_error, pkg)
+    local future = git.fetch(pkg)
+    local ok = pcall(future.wait)
+    if not ok then
+        log.warn("rocks-git: Error while fetching package updates during sync")
+    end
+    local futureOpt = git.checkout(pkg)
+    if futureOpt and not pcall(futureOpt.wait) then
+        report_error(("rocks-git: Failed to checkout %s"):format(pkg.rev))
+    end
+    ok = build_if_required(report_progress, report_error, pkg)
+    return ok
 end, 3)
 
 ---@type async fun(report_progress: fun(message: string), report_error: fun(message: string), pkg: Package)
@@ -92,23 +132,16 @@ operations.sync = nio.create(function(report_progress, report_error, pkg)
         if rev == pkg.rev then
             return
         else
-            report_progress(("rocks-git: Scyncing %s"):format(pkg.name))
-            local future = git.fetch(pkg)
-            local ok = pcall(future.wait)
-            if not ok then
-                log.warn("rocks-git: Error while fetching package updates during sync")
-            end
-            local futureOpt = git.checkout(pkg)
-            if futureOpt and not pcall(futureOpt.wait) then
-                report_error(("rocks-git: Failed to checkout %s"):format(pkg.rev))
-            end
-            ok = build_if_required(report_progress, report_error, pkg)
-            if ok then
+            report_progress(("rocks-git: %s"):format(pkg.name))
+            local ok = update_to_rev(report_progress, report_error, pkg)
+            if ok and pkg.rev then
+                report_progress(("rocks-git: %s -> %s"):format(pkg.name, pkg.rev))
+            elseif ok then
                 report_progress(("rocks-git: Synced %s"):format(pkg.name))
             end
         end
     else
-        report_progress(("rocks-git: Updating %s"):format(pkg.name))
+        report_progress(("rocks-git: Updating %s (unpinned)"):format(pkg.name))
         local head_branch = git.get_head_branch(pkg)
         local rev = git.get_rev(pkg)
         if head_branch ~= rev then
@@ -116,17 +149,30 @@ operations.sync = nio.create(function(report_progress, report_error, pkg)
             local futureOpt = git.checkout(pkg)
             if futureOpt and not pcall(futureOpt.wait) then
                 report_error(("rocks-git: Failed to checkout %s"):format(pkg.rev))
+                return
             end
         end
-        local future = git.pull(pkg)
-        local ok = pcall(future.wait)
-        if not ok then
-            report_error(("rocks-git: Failed to pull %s"):format(pkg.name))
-        end
-        ok = build_if_required(report_progress, report_error, pkg)
-        if ok then
-            report_progress(("rocks-git: Updated %s"):format(pkg.name))
-        end
+        update_pull(report_progress, report_error, pkg)
+    end
+end, 3)
+
+---@type async fun(report_progress: fun(message: string), report_error: fun(message: string), pkg: Package): Package
+operations.update = nio.create(function(report_progress, report_error, pkg)
+    if not pkg.rev then
+        update_pull(report_progress, report_error, pkg)
+        return pkg
+    end
+    local version_tuple = git.get_latest_remote_semver_tag(pkg.url).wait()
+    ---@cast version_tuple tag_version_tuple
+    local prev = pkg.rev
+    pkg.rev = version_tuple[1]
+    local ok = update_to_rev(report_progress, report_error, pkg)
+    if ok then
+        report_progress(("rocks-git: Updated %s: %s -> %s"):format(pkg.name, prev, pkg.rev))
+        return pkg
+    else
+        pkg.rev = prev
+        return pkg
     end
 end, 3)
 
