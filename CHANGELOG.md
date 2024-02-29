@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.2.1...v1.3.0) (2024-02-29)
+
+
+### Features
+
+* hook into `:Rocks install` and `:Rocks update` ([3c71055](https://github.com/nvim-neorocks/rocks-git.nvim/commit/3c71055029cb38eb3cc08e7e0d212fa68d6cd64b))
+
 ## [1.2.1](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.2.0...v1.2.1) (2024-01-01)
 
 
