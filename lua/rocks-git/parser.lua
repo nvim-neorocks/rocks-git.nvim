@@ -98,7 +98,7 @@ function parser.parse_install_args(args)
         acc.spec[field] = mapped_value
         return acc
     end)
-    if not result.spec.rev and #result.invalid_args == 1 and not vim.startswith(result.invalid_args[1], "opt=") then
+    if not result.spec.rev and #result.invalid_args == 1 and result.invalid_args[1]:find("=") == nil then
         -- Single arg without a field prefix = version.
         result.spec.rev = result.invalid_args[1]
         result.invalid_args = {}

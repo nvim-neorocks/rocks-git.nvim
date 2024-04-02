@@ -68,6 +68,7 @@ describe("Parser", function()
                 { "vranch=main" },
                 parser.parse_install_args({ "rev=1.0.0", "opt=true", "vranch=main", "build=foo" }).invalid_args
             )
+            assert.same({ "op=true" }, parser.parse_install_args({ "opt=true", "op=true" }).invalid_args)
         end)
 
         it("Single arg without a field prefix is rev/version", function()
