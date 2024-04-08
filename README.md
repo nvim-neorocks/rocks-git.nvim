@@ -71,7 +71,7 @@ The only difference is the `:Rocks install {plugin} {args?}` command.
 
 Arguments:
 
-- `plugin`: The plugin, e.g. `owner/repo` or a git HTTPS/SSH URL.
+- `plugin`: The plugin short name[^1], e.g. `owner/repo` or a git HTTPS/SSH URL.
 - `args`: (optional) `key=value` pairs, see [Configuration options](#configuration-options).
 
 If a plugin is not pinned to a revision or tag with the `rev` field,
@@ -85,11 +85,14 @@ that is managed by this plugin:
 | Field    | Type      | Required?             | Description                                                                                          |
 |:--       |:--        |:--                    |:--                                                                                                   |
 | `name`   | `string`  | Yes                   | Name of the plugin                                                                                   |
-| `git`    | `string`  | Yes                   | Git short name, e.g. `"nvim-neorocks/rocks-git.nvim"` or a git URL                                   |
+| `git`    | `string`  | Yes                   | Git short name[^1], e.g. `"nvim-neorocks/rocks-git.nvim"` or a git URL. 
+            |
 | `opt`    | `boolean` | No (default: `false`) | Plugins with `opt = true` will not be loaded on startup. See `:h packadd`                            |
 | `rev`    | `string`  | No                    | Git revision or tag to checkout                                                                      |
 | `branch` | `string`  | No                    | Git branch to checkout                                                                               |
 | `build`  | `string`  | No                    | Shell or Vimscript command to run after install/update. Will run a vim command if prefixed with `:`  |
+
+[^1]: Also supports `github:`, `gitlab:` and `sourcehut:` prefixes, e.g. `gitlab:owner/repo` (HTTPS only).
 
 > [!TIP]
 >

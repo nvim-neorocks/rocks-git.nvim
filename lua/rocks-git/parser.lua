@@ -11,7 +11,7 @@
 -- Version:    0.1.0
 -- License:    GPLv3
 -- Created:    27 Feb 2024
--- Updated:    27 Feb 2024
+-- Updated:    08 Apr 2024
 -- Homepage:   https://github.com/nvim-neorocks/rocks-git.nvim
 -- Maintainer: mrcjkb <marc@jakobi.dev>
 
@@ -35,14 +35,34 @@ end
 
 ---@param str string
 ---@return boolean
-function parser.is_github_shorthand(str)
-    return #(vim.split(str, "/")) == 2
+function parser.is_repo_shorthand(str)
+    if #(vim.split(str, "/")) ~= 2 then
+        return false
+    end
+    if str:find(":") == nil then
+        return true
+    end
+    local prefix = str:match("([^:]+):[^/]+/[^/]")
+    return prefix == "gitlab" or prefix == "sourcehut" or prefix == "github"
+end
+
+local shorthand_format_map = {
+    github = "https://github.com/%s.git",
+    gitlab = "https://gitlab.com/%s.git",
+    sourcehut = "https://git.sr.ht/~%s",
+}
+
+---@param str string
+---@return string?
+local function parse_shorthand_url(str)
+    local prefix, owner_repo = str:match("([^:]+):([^/]+/[^/]+)")
+    local url_format = prefix and shorthand_format_map[prefix]
+    return url_format and url_format:format(owner_repo)
 end
 
 ---@param str string
 function parser.parse_git_url(str)
-    -- TODO: Support github:<owner>/<repo> and gitlab:<owner>/<repo>
-    return parser.is_git_url(str) and str or config.url_format:format(str)
+    return parser.is_git_url(str) and str or parse_shorthand_url(str) or config.url_format:format(str)
 end
 
 ---@param url string

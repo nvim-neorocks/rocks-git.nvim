@@ -20,6 +20,10 @@ The `:Rocks install {plugin} {args?}` command is extended by this module as foll
 Arguments:
 
  - `plugin`: The plugin, e.g. `owner/repo` or a git HTTPS/SSH URL.
+             Can also be one of the following short hands (HTTPS only):
+               - gitlab:owner/repo
+               - sourcehut:owner/repo
+               - github:owner/repo
  - `args`: (optional) `key=value` pairs, see [Configuration options](#configuration-options).
 
 
