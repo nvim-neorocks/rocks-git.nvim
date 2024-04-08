@@ -11,6 +11,11 @@ describe("Parser", function()
             assert.True(parser.is_git_url(url))
         end)
 
+        it("Accepts sourcehut URLs", function()
+            local url = "https://git.sr.ht/~whynothugo/lsp_lines.nvim"
+            assert.True(parser.is_git_url(url))
+        end)
+
         it("Can recognize non-git URLs", function()
             local url = "https://github.com/nvim-neorocks/rocks-git.nvim"
             assert.False(parser.is_git_url(url))
