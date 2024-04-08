@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.3.2...v1.4.0) (2024-04-08)
+
+
+### Features
+
+* support `github:`, `gitlab:` and `sourcehut:` short name prefixes ([#24](https://github.com/nvim-neorocks/rocks-git.nvim/issues/24)) ([3d8b1cd](https://github.com/nvim-neorocks/rocks-git.nvim/commit/3d8b1cd291aef12e5693bea979c83f744b7a8813))
+
 ## [1.3.2](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.3.1...v1.3.2) (2024-04-08)
 
 
