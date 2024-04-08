@@ -16,6 +16,10 @@
 ---Arguments:
 ---
 --- - `plugin`: The plugin, e.g. `owner/repo` or a git HTTPS/SSH URL.
+---             Can also be one of the following short hands (HTTPS only):
+---               - gitlab:owner/repo
+---               - sourcehut:owner/repo
+---               - github:owner/repo
 --- - `args`: (optional) `key=value` pairs, see [Configuration options](#configuration-options).
 ---
 ---
@@ -96,7 +100,7 @@ rocks_git.get_install_callback = nio.create(function(mut_rocks_toml, arg_list)
         return
     end
     local git_rock = arg_list[1]
-    if not parser.is_github_shorthand(git_rock) and not parser.is_git_url(git_rock) then
+    if not parser.is_repo_shorthand(git_rock) and not parser.is_git_url(git_rock) then
         return
     end
     ---@type string[]

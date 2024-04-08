@@ -23,9 +23,27 @@ describe("Parser", function()
     end)
 
     describe("is_github_shorthand", function()
-        it("Can recognize GitHub shorthand", function()
+        it("Can recognize GitHub shorthand without prefix", function()
             local url = "nvim-neorocks/rocks-git.nvim"
-            assert.True(parser.is_github_shorthand(url))
+            assert.True(parser.is_repo_shorthand(url))
+        end)
+        it("Can recognize GitLab shorthand", function()
+            local url = "gitlab:nvim-neorocks/rocks-git.nvim"
+            assert.True(parser.is_repo_shorthand(url))
+        end)
+        it("Can recognize GitHub shorthand", function()
+            local url = "github:nvim-neorocks/rocks-git.nvim"
+            assert.True(parser.is_repo_shorthand(url))
+        end)
+        it("Can recognize sourcehut shorthand", function()
+            local url = "sourcehut:nvim-neorocks/rocks-git.nvim"
+            assert.True(parser.is_repo_shorthand(url))
+        end)
+        it("Does not accept unknown shorthand", function()
+            local url = "foo:nvim-neorocks/rocks-git.nvim"
+            assert.False(parser.is_repo_shorthand(url))
+            url = "bar:nvim-neorocks/rocks-git.nvim"
+            assert.False(parser.is_repo_shorthand(url))
         end)
     end)
 
@@ -47,9 +65,24 @@ describe("Parser", function()
     end)
 
     describe("parse_git_url", function()
-        it("Can parse SSH URL from GitHub shorthand", function()
+        it("Can parse SSH URL from GitHub shorthand without a prefix", function()
             local shorthand = "nvim-neorocks/rocks-git.nvim"
             local url = "https://github.com/nvim-neorocks/rocks-git.nvim.git"
+            assert.same(url, parser.parse_git_url(shorthand))
+        end)
+        it("Can parse SSH URL from GitHub shorthand with a prefix", function()
+            local shorthand = "github:nvim-neorocks/rocks-git.nvim"
+            local url = "https://github.com/nvim-neorocks/rocks-git.nvim.git"
+            assert.same(url, parser.parse_git_url(shorthand))
+        end)
+        it("Can parse SSH URL from GitLab shorthand with a prefix", function()
+            local shorthand = "gitlab:nvim-neorocks/rocks-git.nvim"
+            local url = "https://gitlab.com/nvim-neorocks/rocks-git.nvim.git"
+            assert.same(url, parser.parse_git_url(shorthand))
+        end)
+        it("Can parse SSH URL from sourcehut shorthand with a prefix", function()
+            local shorthand = "sourcehut:nvim-neorocks/rocks-git.nvim"
+            local url = "https://git.sr.ht/~nvim-neorocks/rocks-git.nvim"
             assert.same(url, parser.parse_git_url(shorthand))
         end)
     end)
