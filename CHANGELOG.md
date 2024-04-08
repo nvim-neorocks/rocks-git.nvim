@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.3.1...v1.3.2) (2024-04-08)
+
+
+### Bug Fixes
+
+* sourcehut support ([#22](https://github.com/nvim-neorocks/rocks-git.nvim/issues/22)) ([d6eb133](https://github.com/nvim-neorocks/rocks-git.nvim/commit/d6eb133c026f9fe30e0da2ed70493536a9114f84))
+
 ## [1.3.1](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.3.0...v1.3.1) (2024-04-02)
 
 
