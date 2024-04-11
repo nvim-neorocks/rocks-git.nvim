@@ -85,8 +85,7 @@ that is managed by this plugin:
 | Field    | Type      | Required?             | Description                                                                                          |
 |:--       |:--        |:--                    |:--                                                                                                   |
 | `name`   | `string`  | Yes                   | Name of the plugin                                                                                   |
-| `git`    | `string`  | Yes                   | Git short name[^1], e.g. `"nvim-neorocks/rocks-git.nvim"` or a git URL. 
-            |
+| `git`    | `string`  | Yes                   | Git short name[^1], e.g. `"nvim-neorocks/rocks-git.nvim"` or a git URL.                              |
 | `opt`    | `boolean` | No (default: `false`) | Plugins with `opt = true` will not be loaded on startup. See `:h packadd`                            |
 | `rev`    | `string`  | No                    | Git revision or tag to checkout                                                                      |
 | `branch` | `string`  | No                    | Git branch to checkout                                                                               |
