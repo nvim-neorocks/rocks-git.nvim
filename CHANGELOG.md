@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.4.0...v1.5.0) (2024-05-01)
+
+
+### Features
+
+* support codeberg: short name prefix ([#26](https://github.com/nvim-neorocks/rocks-git.nvim/issues/26)) ([e81ee24](https://github.com/nvim-neorocks/rocks-git.nvim/commit/e81ee245b0e46fdac1bacd487fbab461eb464ab5))
+
 ## [1.4.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.3.2...v1.4.0) (2024-04-08)
 
 
