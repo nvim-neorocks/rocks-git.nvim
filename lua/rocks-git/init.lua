@@ -20,6 +20,7 @@
 ---               - gitlab:owner/repo
 ---               - sourcehut:owner/repo
 ---               - github:owner/repo
+---               - codeberg:owner/repo
 --- - `args`: (optional) `key=value` pairs, see [Configuration options](#configuration-options).
 ---
 ---
