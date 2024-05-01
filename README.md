@@ -91,7 +91,7 @@ that is managed by this plugin:
 | `branch` | `string`  | No                    | Git branch to checkout                                                                               |
 | `build`  | `string`  | No                    | Shell or Vimscript command to run after install/update. Will run a vim command if prefixed with `:`  |
 
-[^1]: Also supports `github:`, `gitlab:` and `sourcehut:` prefixes, e.g. `gitlab:owner/repo` (HTTPS only).
+[^1]: Also supports `github:`, `gitlab:`, `codeberg` and `sourcehut:` prefixes, e.g. `gitlab:owner/repo` (HTTPS only).
 
 > [!TIP]
 >

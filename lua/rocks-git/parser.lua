@@ -43,13 +43,14 @@ function parser.is_repo_shorthand(str)
         return true
     end
     local prefix = str:match("([^:]+):[^/]+/[^/]")
-    return prefix == "gitlab" or prefix == "sourcehut" or prefix == "github"
+    return prefix == "gitlab" or prefix == "sourcehut" or prefix == "github" or prefix == "codeberg"
 end
 
 local shorthand_format_map = {
     github = "https://github.com/%s.git",
     gitlab = "https://gitlab.com/%s.git",
     sourcehut = "https://git.sr.ht/~%s",
+    codeberg = "https://codeberg.org/~%s.git",
 }
 
 ---@param str string

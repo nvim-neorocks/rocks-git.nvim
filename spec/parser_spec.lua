@@ -39,6 +39,10 @@ describe("Parser", function()
             local url = "sourcehut:nvim-neorocks/rocks-git.nvim"
             assert.True(parser.is_repo_shorthand(url))
         end)
+        it("Can recognize Codeberg shorthand", function()
+            local url = "codeberg:nvim-neorocks/rocks-git.nvim"
+            assert.True(parser.is_repo_shorthand(url))
+        end)
         it("Does not accept unknown shorthand", function()
             local url = "foo:nvim-neorocks/rocks-git.nvim"
             assert.False(parser.is_repo_shorthand(url))
