@@ -142,7 +142,7 @@ operations.sync = nio.create(function(report_progress, report_error, pkg)
         end
     else
         report_progress(("rocks-git: Updating %s (unpinned)"):format(pkg.name))
-        local head_branch = git.get_head_branch(pkg)
+        local head_branch = pkg.branch or git.get_head_branch(pkg)
         local rev = git.get_rev(pkg)
         if head_branch ~= rev then
             pkg.rev = head_branch
