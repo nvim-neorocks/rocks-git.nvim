@@ -5,7 +5,7 @@
 
 ### Bug Fixes
 
-* sync uses provided branch if set ([#29](https://github.com/nvim-neorocks/rocks-git.nvim/issues/29)) ([625dac1](https://github.com/nvim-neorocks/rocks-git.nvim/commit/625dac1a29aa7f0f56c5af9142c4dbb5871ce9ee))
+* sync: use provided branch if set ([#29](https://github.com/nvim-neorocks/rocks-git.nvim/issues/29)) ([625dac1](https://github.com/nvim-neorocks/rocks-git.nvim/commit/625dac1a29aa7f0f56c5af9142c4dbb5871ce9ee))
 
 ## [1.5.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.4.0...v1.5.0) (2024-05-01)
 
