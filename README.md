@@ -67,7 +67,7 @@ and you are good to go!
 You can use the same `:Rocks {install|update|sync|prune}` commands as you would
 use to install rocks with `rocks.nvim`.
 
-The only difference is the `:Rocks install {plugin} {args?}` command.
+The *only difference* is the `:Rocks install {plugin} {args?}` command.
 
 Arguments:
 
