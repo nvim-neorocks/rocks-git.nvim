@@ -28,8 +28,7 @@
 ## :star2: Summary
 
 `rocks-git.nvim` extends [`rocks.nvim`](https://github.com/nvim-neorocks/rocks-git.nvim)
-with the ability to install plugins into `packpath` directories ([`:h packages`](https://neovim.io/doc/user/repeat.html#packages))
-from git repositories.
+with the ability to install plugins from git repositories.
 
 It does so by hooking into the `:Rocks {install|update|sync|prune}` commands,
 allowing you to add `plugins` entries to your `rocks.toml` as follows:
@@ -75,7 +74,7 @@ Arguments:
 - `args`: (optional) `key=value` pairs, see [Configuration options](#configuration-options).
 
 If a plugin is not pinned to a revision or tag with the `rev` field,
-`:Rocks sync` will always update it to the latest remote revision.
+`:Rocks sync` will update to the most recent tag.
 
 ### Configuration options
 
