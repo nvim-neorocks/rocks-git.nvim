@@ -84,10 +84,15 @@ local function mut_update_rocks_toml(rocks_toml, spec)
     -- toml-edit's metatable con't set a table directly.
     -- Each field has to be set individually.
     rocks_toml.plugins[spec.name] = {}
+    ---@diagnostic disable-next-line: inject-field
     rocks_toml.plugins[spec.name].git = spec.git
+    ---@diagnostic disable-next-line: inject-field
     rocks_toml.plugins[spec.name].rev = spec.rev
+    ---@diagnostic disable-next-line: inject-field
     rocks_toml.plugins[spec.name].opt = spec.opt
+    ---@diagnostic disable-next-line: inject-field
     rocks_toml.plugins[spec.name].branch = spec.branch
+    ---@diagnostic disable-next-line: inject-field
     rocks_toml.plugins[spec.name].build = spec.build
 end
 

@@ -36,7 +36,7 @@
     name = "rocks.nvim";
 
     plugin-overlay = import ./nix/plugin-overlay.nix {
-      inherit name self;
+      inherit name self inputs;
     };
     test-overlay = import ./nix/test-overlay.nix {
       inherit self;
@@ -58,11 +58,11 @@
         pkgs = import nixpkgs {
           inherit system;
           overlays = [
-            plugin-overlay
             neorocks.overlays.default
             gen-luarc.overlays.default
             rocks-nvim-input.overlays.default
             test-overlay
+            plugin-overlay
           ];
         };
 
@@ -122,9 +122,8 @@
         };
 
         packages = rec {
-          default = docgen; # TODO: Package rocks.nvim for nixpkgs
-          # default = rocks-git-nvim;
-          # inherit (pkgs.vimPlugins) rocks-git-nvim;
+          default = rocks-git-nvim;
+          inherit (pkgs.luajitPackages) rocks-git-nvim;
           inherit
             (pkgs)
             docgen
