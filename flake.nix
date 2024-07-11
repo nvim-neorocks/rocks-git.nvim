@@ -83,9 +83,7 @@
           hooks = {
             lua-ls = {
               enable = true;
-              settings = {
-                lua-ls.configuration = luarc;
-              };
+              settings.configuration = luarc;
             };
           };
         };
