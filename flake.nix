@@ -68,8 +68,7 @@
 
         luarc = pkgs.mk-luarc {
           nvim = pkgs.neovim-nightly;
-          neodev-types = "nightly";
-          plugins = with pkgs.lua51Packages; [
+          plugins = with pkgs.luajitPackages; [
             rocks-nvim
             nvim-nio
           ];
@@ -82,10 +81,12 @@
         type-check-nightly = pre-commit-hooks.lib.${system}.run {
           src = self;
           hooks = {
-            lua-ls.enable = true;
-          };
-          settings = {
-            lua-ls.config = luarc;
+            lua-ls = {
+              enable = true;
+              settings = {
+                lua-ls.configuration = luarc;
+              };
+            };
           };
         };
 
@@ -105,15 +106,13 @@
             ${pre-commit-check.shellHook}
             ln -fs ${pkgs.luarc-to-json luarc} .luarc.json
           '';
-          buildInputs = with pre-commit-hooks.packages.${system};
-            [
-              alejandra
+          buildInputs =
+            self.checks.${system}.pre-commit-check.enabledPackages
+            ++ (with pkgs; [
               lua-language-server
-              stylua
-              luacheck
-              editorconfig-checker
-            ]
+            ])
             ++ oa.buildInputs;
+          doCheck = false;
         });
       in {
         devShells = {
