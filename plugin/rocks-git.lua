@@ -1,4 +1,4 @@
-if vim.g.did_load_rocks_git_nvim then
+if vim.g.rocks_git_nvim_loaded then
     return
 end
 local rocks = require("rocks.api")
@@ -10,4 +10,4 @@ rocks.register_rock_handler({
     get_install_callback = rocks_git.get_install_callback,
     get_update_callbacks = rocks_git.get_update_callbacks,
 })
-vim.g.did_load_rocks_git_nvim = true
+vim.g.rocks_git_nvim_loaded = true

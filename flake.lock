@@ -200,7 +200,7 @@
     "flake-parts_10": {
       "inputs": {
         "nixpkgs-lib": [
-          "rocks-nvim-input",
+          "rocks-nvim-flake",
           "neorocks",
           "neovim-nightly",
           "nixpkgs"
@@ -223,7 +223,7 @@
     "flake-parts_11": {
       "inputs": {
         "nixpkgs-lib": [
-          "rocks-nvim-input",
+          "rocks-nvim-flake",
           "neorocks",
           "neovim-nightly",
           "hercules-ci-effects",
@@ -418,7 +418,7 @@
       "inputs": {
         "flake-parts": "flake-parts_8",
         "nixpkgs": [
-          "rocks-nvim-input",
+          "rocks-nvim-flake",
           "nixpkgs"
         ]
       },
@@ -512,13 +512,13 @@
         "flake-compat": "flake-compat_9",
         "gitignore": "gitignore_5",
         "nixpkgs": [
-          "rocks-nvim-input",
+          "rocks-nvim-flake",
           "neorocks",
           "neovim-nightly",
           "nixpkgs"
         ],
         "nixpkgs-stable": [
-          "rocks-nvim-input",
+          "rocks-nvim-flake",
           "neorocks",
           "neovim-nightly",
           "nixpkgs"
@@ -607,7 +607,7 @@
     "gitignore_4": {
       "inputs": {
         "nixpkgs": [
-          "rocks-nvim-input",
+          "rocks-nvim-flake",
           "neorocks",
           "git-hooks",
           "nixpkgs"
@@ -630,7 +630,7 @@
     "gitignore_5": {
       "inputs": {
         "nixpkgs": [
-          "rocks-nvim-input",
+          "rocks-nvim-flake",
           "neorocks",
           "neovim-nightly",
           "git-hooks",
@@ -654,7 +654,7 @@
     "gitignore_6": {
       "inputs": {
         "nixpkgs": [
-          "rocks-nvim-input",
+          "rocks-nvim-flake",
           "pre-commit-hooks",
           "nixpkgs"
         ]
@@ -700,7 +700,7 @@
       "inputs": {
         "flake-parts": "flake-parts_11",
         "nixpkgs": [
-          "rocks-nvim-input",
+          "rocks-nvim-flake",
           "neorocks",
           "neovim-nightly",
           "nixpkgs"
@@ -1012,21 +1012,6 @@
         "type": "github"
       }
     },
-    "nixpkgs_10": {
-      "locked": {
-        "lastModified": 1720424647,
-        "narHash": "sha256-fxNxyMY8yq6IoBIrBB6mncdk9BLO0RdEZ3CMVu1LOE8=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "6edd5cc7bd8eb73d2e7c2f05b34c04a7a4d02de9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1719082008,
@@ -1077,11 +1062,11 @@
     },
     "nixpkgs_5": {
       "locked": {
-        "lastModified": 1720720005,
-        "narHash": "sha256-STU2gFBc7hUBvKHxP2eutD4XP6usGgryaxHVmG078hY=",
+        "lastModified": 1720721669,
+        "narHash": "sha256-1JeLwat5mfCTado8ZVKXg0v+1zf7sok3XCVKpd7+/2o=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "c0689af84b3f5007dbc2f3ccded94f3afa3238c0",
+        "rev": "4b522ae0babb41e09e20bcdbd91fa2d07a2d0afc",
         "type": "github"
       },
       "original": {
@@ -1182,7 +1167,7 @@
         "flake-compat": "flake-compat_10",
         "gitignore": "gitignore_6",
         "nixpkgs": [
-          "rocks-nvim-input",
+          "rocks-nvim-flake",
           "nixpkgs"
         ],
         "nixpkgs-stable": "nixpkgs-stable_4"
@@ -1201,13 +1186,15 @@
         "type": "github"
       }
     },
-    "rocks-nvim-input": {
+    "rocks-nvim-flake": {
       "inputs": {
         "cats-doc": "cats-doc",
         "flake-parts": "flake-parts_7",
         "gen-luarc": "gen-luarc_2",
         "neorocks": "neorocks_2",
-        "nixpkgs": "nixpkgs_10",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
         "pre-commit-hooks": "pre-commit-hooks_2"
       },
       "locked": {
@@ -1231,7 +1218,7 @@
         "neorocks": "neorocks",
         "nixpkgs": "nixpkgs_5",
         "pre-commit-hooks": "pre-commit-hooks",
-        "rocks-nvim-input": "rocks-nvim-input"
+        "rocks-nvim-flake": "rocks-nvim-flake"
       }
     }
   },

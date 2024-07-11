@@ -13,7 +13,10 @@
 
     gen-luarc.url = "github:mrcjkb/nix-gen-luarc-json";
 
-    rocks-nvim-input.url = "github:nvim-neorocks/rocks.nvim";
+    rocks-nvim-flake = {
+      url = "github:nvim-neorocks/rocks.nvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     flake-parts.url = "github:hercules-ci/flake-parts";
 
@@ -28,7 +31,7 @@
     nixpkgs,
     neorocks,
     gen-luarc,
-    rocks-nvim-input,
+    rocks-nvim-flake,
     flake-parts,
     pre-commit-hooks,
     ...
@@ -60,7 +63,6 @@
           overlays = [
             neorocks.overlays.default
             gen-luarc.overlays.default
-            rocks-nvim-input.overlays.default
             test-overlay
             plugin-overlay
           ];
@@ -126,6 +128,7 @@
           inherit
             (pkgs)
             docgen
+            neovim-with-rocks
             ;
         };
 
