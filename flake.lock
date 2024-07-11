@@ -1012,6 +1012,21 @@
         "type": "github"
       }
     },
+    "nixpkgs_10": {
+      "locked": {
+        "lastModified": 1720721669,
+        "narHash": "sha256-1JeLwat5mfCTado8ZVKXg0v+1zf7sok3XCVKpd7+/2o=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "4b522ae0babb41e09e20bcdbd91fa2d07a2d0afc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1719082008,
@@ -1192,9 +1207,7 @@
         "flake-parts": "flake-parts_7",
         "gen-luarc": "gen-luarc_2",
         "neorocks": "neorocks_2",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
+        "nixpkgs": "nixpkgs_10",
         "pre-commit-hooks": "pre-commit-hooks_2"
       },
       "locked": {

@@ -13,10 +13,7 @@
 
     gen-luarc.url = "github:mrcjkb/nix-gen-luarc-json";
 
-    rocks-nvim-flake = {
-      url = "github:nvim-neorocks/rocks.nvim";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    rocks-nvim-flake.url = "github:nvim-neorocks/rocks.nvim";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
 
@@ -36,7 +33,7 @@
     pre-commit-hooks,
     ...
   }: let
-    name = "rocks.nvim";
+    name = "rocks-git.nvim";
 
     plugin-overlay = import ./nix/plugin-overlay.nix {
       inherit name self inputs;
@@ -63,6 +60,7 @@
           overlays = [
             neorocks.overlays.default
             gen-luarc.overlays.default
+            rocks-nvim-flake.overlays.default
             test-overlay
             plugin-overlay
           ];
