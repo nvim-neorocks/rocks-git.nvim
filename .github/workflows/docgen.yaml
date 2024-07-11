@@ -11,8 +11,8 @@ jobs:
     name: Generate docs
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: cachix/install-nix-action@v23
+      - uses: actions/checkout@v3
+      - uses: DeterminateSystems/nix-installer-action@v10
       - uses: cachix/cachix-action@v12
         with:
           name: neorocks
