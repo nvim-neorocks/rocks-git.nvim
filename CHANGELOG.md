@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.5.1...v2.0.0) (2024-07-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* always pin plugins on install and update
+
+### Features
+
+* always pin plugins on install and update ([d0f8d3e](https://github.com/nvim-neorocks/rocks-git.nvim/commit/d0f8d3e3fb8eb4d3f2f3e29991f697ba04ceb487))
+
+
+### Bug Fixes
+
+* **update:** ignore rocks with `pin = true` ([c2dc072](https://github.com/nvim-neorocks/rocks-git.nvim/commit/c2dc0720bfd10d094f9d1eb2f8a5aa1c9dde1c17))
+
 ## [1.5.1](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.5.0...v1.5.1) (2024-05-17)
 
 
