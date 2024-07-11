@@ -102,6 +102,7 @@ in {
     neovim-with-rocks
     ;
 
+  rocks-git-nvim = luajitPackages.rocks-git-nvim;
   vimPlugins =
     prev.vimPlugins
     // {
