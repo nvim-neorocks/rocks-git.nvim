@@ -26,6 +26,10 @@
     packageOverrides = luaPackage-override;
   };
   luajitPackages = prev.luajitPackages // final.luajit.pkgs;
+  lua5_1 = prev.lua5_1.override {
+    packageOverrides = luaPackage-override;
+  };
+  lua51Packages = prev.lua51Packages // final.lua5_1.pkgs;
 
   neovim-with-rocks = let
     rocks = inputs.rocks-nvim-flake.packages.${final.system}.rocks-nvim;
@@ -93,6 +97,8 @@ in {
   inherit
     luajit
     luajitPackages
+    lua5_1
+    lua51Packages
     neovim-with-rocks
     ;
 
