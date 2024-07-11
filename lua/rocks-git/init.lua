@@ -198,12 +198,16 @@ end, 1)
 rocks_git.get_update_callbacks = nio.create(function(mut_rocks_toml)
     ---@cast mut_rocks_toml MutRocksTomlRef
     local rocks_toml = rocks.get_rocks_toml() -- we cannot iterate over MutRocksTomlRef
-    return vim.iter(vim.tbl_values(rocks_toml.plugins))
+    return vim
+        .iter(vim.tbl_values(rocks_toml.plugins))
         :filter(function(spec)
             return type(spec.git) == "string"
         end)
         :map(mk_package)
-        :filter(git.is_outdated)
+        ---@param pkg Package
+        :filter(function(pkg)
+            return pkg.rev == nil or git.is_outdated(pkg)
+        end)
         :map(function(pkg)
             ---@cast pkg Package
             return nio.create(function(report_progress, report_error)

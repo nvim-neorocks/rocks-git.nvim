@@ -69,7 +69,7 @@ operations.install = nio.create(function(report_progress, report_error, pkg)
     if pkg.rev then
         report_progress(("rocks-git: %s -> %s"):format(pkg.name, pkg.rev))
     else
-        report_progress(("rocks-git: %s"):format(pkg.name))
+        report_progress(("rocks-git: %s (Unpinned)"):format(pkg.name))
     end
     local future = git.clone(pkg)
     local ok = pcall(future.wait)
@@ -97,17 +97,19 @@ operations.install = nio.create(function(report_progress, report_error, pkg)
     return false
 end, 3)
 
----@type async fun(report_progress: fun(message: string), report_error: fun(message: string), pkg: Package)
+---@type async fun(report_progress: fun(message: string) | nil, report_error: fun(message: string), pkg: Package):boolean
 local update_pull = nio.create(function(report_progress, report_error, pkg)
     local future = git.pull(pkg)
     local ok = pcall(future.wait)
     if not ok then
         report_error(("rocks-git: Failed to pull %s"):format(pkg.name))
+        return ok
     end
     ok = build_if_required(report_progress, report_error, pkg)
-    if ok then
+    if ok and report_progress then
         report_progress(("rocks-git: Updated %s (unpinned)"):format(pkg.name))
     end
+    return ok
 end, 3)
 
 ---@type async fun(report_progress: fun(message: string), report_error: fun(message: string), pkg: Package)
@@ -127,46 +129,36 @@ end, 3)
 
 ---@type async fun(report_progress: fun(message: string), report_error: fun(message: string), pkg: Package)
 operations.sync = nio.create(function(report_progress, report_error, pkg)
-    if pkg.rev then
-        local rev = git.get_rev(pkg)
-        if rev == pkg.rev then
-            return
-        else
-            report_progress(("rocks-git: %s"):format(pkg.name))
-            local ok = update_to_rev(report_progress, report_error, pkg)
-            if ok and pkg.rev then
-                report_progress(("rocks-git: %s -> %s"):format(pkg.name, pkg.rev))
-            elseif ok then
-                report_progress(("rocks-git: Synced %s"):format(pkg.name))
-            end
-        end
+    if not pkg.rev then
+        return
+    end
+    local rev = git.get_rev(pkg)
+    if rev == pkg.rev then
+        return
     else
-        report_progress(("rocks-git: Updating %s (unpinned)"):format(pkg.name))
-        local head_branch = pkg.branch or git.get_head_branch(pkg)
-        local rev = git.get_rev(pkg)
-        if head_branch ~= rev then
-            pkg.rev = head_branch
-            local futureOpt = git.checkout(pkg)
-            if futureOpt and not pcall(futureOpt.wait) then
-                report_error(("rocks-git: Failed to checkout %s"):format(pkg.rev))
-                return
-            end
+        report_progress(("rocks-git: %s"):format(pkg.name))
+        local ok = update_to_rev(report_progress, report_error, pkg)
+        if ok and pkg.rev then
+            report_progress(("rocks-git: %s -> %s"):format(pkg.name, pkg.rev))
+        elseif ok then
+            report_progress(("rocks-git: Synced %s"):format(pkg.name))
         end
-        update_pull(report_progress, report_error, pkg)
     end
 end, 3)
 
 ---@type async fun(report_progress: fun(message: string), report_error: fun(message: string), pkg: Package): Package
 operations.update = nio.create(function(report_progress, report_error, pkg)
-    if not pkg.rev then
-        update_pull(report_progress, report_error, pkg)
-        return pkg
-    end
     local version_tuple = git.get_latest_remote_semver_tag(pkg.url).wait()
     ---@cast version_tuple tag_version_tuple
-    local prev = pkg.rev
+    local prev = pkg.rev or git.get_rev(pkg)
     pkg.rev = version_tuple[1]
-    local ok = update_to_rev(report_progress, report_error, pkg)
+    local ok
+    if not pkg.rev then
+        ok = update_pull(nil, report_error, pkg)
+        pkg.rev = git.get_rev(pkg)
+    else
+        ok = update_to_rev(report_progress, report_error, pkg)
+    end
     if ok then
         report_progress(("rocks-git: Updated %s: %s -> %s"):format(pkg.name, prev, pkg.rev))
         return pkg
