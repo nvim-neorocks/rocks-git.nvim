@@ -206,7 +206,7 @@ rocks_git.get_update_callbacks = nio.create(function(mut_rocks_toml)
         :map(mk_package)
         ---@param pkg Package
         :filter(function(pkg)
-            return pkg.rev == nil or git.is_outdated(pkg)
+            return pkg.pin ~= true and (pkg.rev == nil or git.is_outdated(pkg))
         end)
         :map(function(pkg)
             ---@cast pkg Package
