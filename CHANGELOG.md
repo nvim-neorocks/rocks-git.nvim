@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.0.0...v2.0.1) (2024-07-18)
+
+
+### Bug Fixes
+
+* save lowercase git URIs to rocks.toml ([#41](https://github.com/nvim-neorocks/rocks-git.nvim/issues/41)) ([9d37beb](https://github.com/nvim-neorocks/rocks-git.nvim/commit/9d37beb41ac36e97a55edaf52747c5d3e9c16a0d))
+
 ## [2.0.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v1.5.1...v2.0.0) (2024-07-11)
 
 
