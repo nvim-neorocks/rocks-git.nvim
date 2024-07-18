@@ -105,7 +105,7 @@ rocks_git.get_install_callback = nio.create(function(mut_rocks_toml, arg_list)
     if #arg_list < 1 then
         return
     end
-    local git_rock = arg_list[1]
+    local git_rock = arg_list[1]:lower()
     if not parser.is_repo_shorthand(git_rock) and not parser.is_git_url(git_rock) then
         return
     end
