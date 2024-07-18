@@ -67,7 +67,7 @@ function parser.parse_git_url(str)
 end
 
 ---@param url string
----@return string
+---@return string?
 function parser.plugin_name_from_git_uri(url)
     return url:match("/([^%/]+).git$") or url:match("/([^%/]+)$")
 end
