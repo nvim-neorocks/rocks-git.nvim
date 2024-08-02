@@ -78,7 +78,7 @@ local function mk_package(spec)
     }, spec)
 end
 
----@param rocks_toml RocksToml
+---@param rocks_toml MutRocksTomlRef
 ---@param spec PackageSpec
 local function mut_update_rocks_toml(rocks_toml, spec)
     -- toml-edit's metatable con't set a table directly.
@@ -97,11 +97,10 @@ local function mut_update_rocks_toml(rocks_toml, spec)
 end
 
 ---@package
+---@param mut_rocks_toml MutRocksTomlRef
+---@param arg_list string[]
 ---@return rock_handler_callback | nil
----@type async fun(rocks_toml: MutRocksTomlRef, arg_list: string[]):rock_handler_callback | nil
 rocks_git.get_install_callback = nio.create(function(mut_rocks_toml, arg_list)
-    ---@cast mut_rocks_toml MutRocksTomlRef
-    ---@cast arg_list string[]
     if #arg_list < 1 then
         return
     end
@@ -111,10 +110,10 @@ rocks_git.get_install_callback = nio.create(function(mut_rocks_toml, arg_list)
     end
     ---@type string[]
     local args = #arg_list == 1 and {} or { unpack(arg_list, 2, #arg_list) }
-    return nio.create(function(on_progress, on_error)
-        ---@cast on_progress fun(msg: string)
-        ---@cast on_error fun(msg: string)
-
+    ---@param on_progress fun(msg: string)
+    ---@param on_error fun(msg: string)
+    ---@param on_success? fun(opts: rock_handler.on_success.Opts)
+    return nio.create(function(on_progress, on_error, on_success)
         local parse_result = args and parser.parse_install_args(args) or { spec = {}, invalid_args = {} }
         if not vim.tbl_isempty(parse_result.invalid_args) then
             on_error(("rocks-git: invalid install args: %s"):format(vim.inspect(parse_result.invalid_args)))
@@ -166,7 +165,7 @@ rocks_git.get_install_callback = nio.create(function(mut_rocks_toml, arg_list)
                 return
             end
         end
-        local ok = operations.install(on_progress, on_error, pkg)
+        local ok = operations.install(on_progress, on_error, on_success, pkg)
         if ok then
             mut_update_rocks_toml(mut_rocks_toml, pkg)
         end
@@ -174,23 +173,25 @@ rocks_git.get_install_callback = nio.create(function(mut_rocks_toml, arg_list)
 end, 2)
 
 ---@package
----@type async fun(spec: RockSpec):rock_handler_callback | nil
+---@param spec RockSpec
+---@return rock_handler_callback | nil
 rocks_git.get_sync_callback = nio.create(function(spec)
     ---@cast spec RockSpec
     if not spec.git then
         return
     end
     ---@cast spec PackageSpec
-    return nio.create(function(on_progress, on_error)
-        ---@cast on_progress fun(msg: string)
-        ---@cast on_error fun(msg: string)
+    ---@param on_progress fun(msg: string)
+    ---@param on_error fun(msg: string)
+    ---@param on_success? fun(opts: rock_handler.on_success.Opts)
+    return nio.create(function(on_progress, on_error, on_success)
         local pkg = mk_package(spec)
         if not vim.uv.fs_stat(pkg.dir) then
-            operations.install(on_progress, on_error, pkg)
+            operations.install(on_progress, on_error, on_success, pkg)
             return
         end
-        operations.sync(on_progress, on_error, pkg)
-    end, 2)
+        operations.sync(on_progress, on_error, on_success, pkg)
+    end, 3)
 end, 1)
 
 ---@package
@@ -208,12 +209,15 @@ rocks_git.get_update_callbacks = nio.create(function(mut_rocks_toml)
         :filter(function(pkg)
             return pkg.pin ~= true and (pkg.rev == nil or git.is_outdated(pkg))
         end)
+        ---@param pkg Package
         :map(function(pkg)
-            ---@cast pkg Package
-            return nio.create(function(on_progress, on_error)
+            ---@param on_progress fun(msg: string)
+            ---@param on_error fun(msg: string)
+            ---@param on_success? fun(opts: rock_handler.on_success.Opts)
+            return nio.create(function(on_progress, on_error, on_success)
                 ---@cast on_progress fun(msg: string)
                 ---@cast on_error fun(msg: string)
-                local updated_pkg = operations.update(on_progress, on_error, pkg)
+                local updated_pkg = operations.update(on_progress, on_error, on_success, pkg)
                 mut_update_rocks_toml(mut_rocks_toml, updated_pkg)
             end, 2)
         end)
@@ -221,9 +225,12 @@ rocks_git.get_update_callbacks = nio.create(function(mut_rocks_toml)
 end, 1)
 
 ---@package
----@type async fun(user_rocks: RockSpec[]): rock_handler_callback | nil
+---@param user_rocks RockSpec[]
+---@return rock_handler_callback | nil
 rocks_git.get_prune_callback = nio.create(function(user_rocks)
     ---@cast user_rocks RockSpec[]
+    ---@param on_progress fun(msg: string)
+    ---@param on_error fun(msg: string)
     return function(on_progress, on_error)
         for _, packdir in pairs({ "start", "opt" }) do
             local path = vim.fs.joinpath(config.path, packdir)

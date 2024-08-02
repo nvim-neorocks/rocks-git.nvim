@@ -1211,15 +1211,16 @@
         "pre-commit-hooks": "pre-commit-hooks_2"
       },
       "locked": {
-        "lastModified": 1721158609,
-        "narHash": "sha256-AQpWtgqY9MkXUKDgVs6+ySC2PlkQc9ZBJxO3hIixlzw=",
+        "lastModified": 1722633604,
+        "narHash": "sha256-56TXyDLKygIwwm4DOcZk0g/b47rP+iEXeK6ugJCBLDY=",
         "owner": "nvim-neorocks",
         "repo": "rocks.nvim",
-        "rev": "ba6eeddb53394b6827818ab9f8acd0f8731c4cd3",
+        "rev": "5f37ddebde83ff37a73eaa29f523d7c4f40c25b0",
         "type": "github"
       },
       "original": {
         "owner": "nvim-neorocks",
+        "ref": "dummy-rocks",
         "repo": "rocks.nvim",
         "type": "github"
       }
