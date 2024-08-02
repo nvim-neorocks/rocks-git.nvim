@@ -21,7 +21,7 @@ local git = require("rocks-git.git")
 local log = require("rocks.log")
 local nio = require("nio")
 
----@param on_progress fun(message: string)
+---@param on_progress fun(message: string) | nil
 ---@param on_error fun(message: string)
 ---@param pkg Package
 ---@return boolean success
@@ -30,7 +30,9 @@ local function build_if_required(on_progress, on_error, pkg)
     if not pkg.build then
         return true
     end
-    on_progress(("rocks-git: Building %s"):format(pkg.name))
+    if on_progress then
+        on_progress(("rocks-git: Building %s"):format(pkg.name))
+    end
     if pkg.build:sub(1, 1) == ":" then
         ---@diagnostic disable-next-line: param-type-mismatch
         local ok, err = pcall(vim.cmd, pkg.build)
@@ -64,8 +66,11 @@ local function build_if_required(on_progress, on_error, pkg)
     return true
 end
 
----@type async fun(on_progress: fun(message: string), on_error: fun(message: string), pkg: Package): boolean
-operations.install = nio.create(function(on_progress, on_error, pkg)
+---@param on_progress fun(message: string)
+---@param on_error fun(message: string)
+---@param on_success fun(opts: rock_handler.on_success.Opts) | nil
+---@param pkg Package
+operations.install = nio.create(function(on_progress, on_error, on_success, pkg)
     if pkg.rev then
         on_progress(("rocks-git: %s -> %s"):format(pkg.name, pkg.rev))
     else
@@ -92,12 +97,25 @@ operations.install = nio.create(function(on_progress, on_error, pkg)
         else
             on_progress(("rocks-git: Installed %s"):format(pkg.name))
         end
+        if type(on_success) == "function" then
+            local is_semver = pkg.rev and pcall(vim.version.parse, pkg.rev)
+            on_success({
+                action = "install",
+                rock = {
+                    name = pkg.name,
+                    version = is_semver and pkg.rev or "scm",
+                },
+            })
+        end
         return true
     end
     return false
-end, 3)
+end, 4)
 
----@type async fun(on_progress: fun(message: string) | nil, on_error: fun(message: string), pkg: Package):boolean
+---@param on_progress fun(message: string) | nil
+---@param on_error fun(message: string)
+---@param pkg Package
+---@return boolean
 local update_pull = nio.create(function(on_progress, on_error, pkg)
     local future = git.pull(pkg)
     local ok = pcall(future.wait)
@@ -112,7 +130,9 @@ local update_pull = nio.create(function(on_progress, on_error, pkg)
     return ok
 end, 3)
 
----@type async fun(on_progress: fun(message: string), on_error: fun(message: string), pkg: Package)
+---@param on_progress fun(message: string)
+---@param on_error fun(message: string)
+---@param pkg Package
 local update_to_rev = nio.create(function(on_progress, on_error, pkg)
     local future = git.fetch(pkg)
     local ok = pcall(future.wait)
@@ -127,8 +147,26 @@ local update_to_rev = nio.create(function(on_progress, on_error, pkg)
     return ok
 end, 3)
 
----@type async fun(on_progress: fun(message: string), on_error: fun(message: string), pkg: Package)
-operations.sync = nio.create(function(on_progress, on_error, pkg)
+---@param pkg Package
+---@param on_success? fun(opts: rock_handler.on_success.Opts) | nil
+local function install_semver_stub(pkg, on_success)
+    local is_semver = pkg.rev and pcall(vim.version.parse, pkg.rev)
+    if is_semver and type(on_success) == "function" then
+        on_success({
+            action = "install",
+            rock = {
+                name = pkg.name,
+                version = pkg.rev,
+            },
+        })
+    end
+end
+
+---@param on_progress fun(message: string)
+---@param on_error fun(message: string)
+---@param on_success? fun(opts: rock_handler.on_success.Opts) | nil
+---@param pkg Package
+operations.sync = nio.create(function(on_progress, on_error, on_success, pkg)
     if not pkg.rev then
         return
     end
@@ -138,16 +176,22 @@ operations.sync = nio.create(function(on_progress, on_error, pkg)
     else
         on_progress(("rocks-git: %s"):format(pkg.name))
         local ok = update_to_rev(on_progress, on_error, pkg)
+        if ok then
+            install_semver_stub(pkg, on_success)
+        end
         if ok and pkg.rev then
             on_progress(("rocks-git: %s -> %s"):format(pkg.name, pkg.rev))
         elseif ok then
             on_progress(("rocks-git: Synced %s"):format(pkg.name))
         end
     end
-end, 3)
+end, 4)
 
----@type async fun(on_progress: fun(message: string), on_error: fun(message: string), pkg: Package): Package
-operations.update = nio.create(function(on_progress, on_error, pkg)
+---@param on_progress fun(message: string)
+---@param on_error fun(message: string)
+---@param on_success? fun(opts: rock_handler.on_success.Opts) | nil
+---@param pkg Package
+operations.update = nio.create(function(on_progress, on_error, on_success, pkg)
     local version_tuple = git.get_latest_remote_semver_tag(pkg.url).wait()
     ---@cast version_tuple tag_version_tuple
     local prev = pkg.rev or git.get_rev(pkg)
@@ -160,16 +204,17 @@ operations.update = nio.create(function(on_progress, on_error, pkg)
         ok = update_to_rev(on_progress, on_error, pkg)
     end
     if ok then
+        install_semver_stub(pkg, on_success)
         on_progress(("rocks-git: Updated %s: %s -> %s"):format(pkg.name, prev, pkg.rev))
         return pkg
     else
         pkg.rev = prev
         return pkg
     end
-end, 3)
+end, 4)
 
 ---@param dir string
----@return fun(_:any, path:string):(name: string, type: string)
+---@return fun(_:unknown, path:string):(name: string, type: string)
 local function iter_subdirs(dir)
     return coroutine.wrap(function()
         local handle = vim.uv.fs_scandir(dir)

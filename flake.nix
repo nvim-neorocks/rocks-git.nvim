@@ -13,7 +13,7 @@
 
     gen-luarc.url = "github:mrcjkb/nix-gen-luarc-json";
 
-    rocks-nvim-flake.url = "github:nvim-neorocks/rocks.nvim";
+    rocks-nvim-flake.url = "github:nvim-neorocks/rocks.nvim/dummy-rocks";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
 
@@ -69,7 +69,7 @@
         luarc = pkgs.mk-luarc {
           nvim = pkgs.neovim-nightly;
           plugins = with pkgs.luajitPackages; [
-            rocks-nvim
+            inputs.rocks-nvim-flake.packages.${pkgs.system}.rocks-nvim
             nvim-nio
           ];
           disabled-diagnostics = [
