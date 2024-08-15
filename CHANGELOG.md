@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.2](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.0.1...v2.0.2) (2024-08-15)
+
+
+### Bug Fixes
+
+* accept https URLs that don't end in .git ([#47](https://github.com/nvim-neorocks/rocks-git.nvim/issues/47)) ([089dcae](https://github.com/nvim-neorocks/rocks-git.nvim/commit/089dcaeffe1ff24c8a6af26ba3055d39f779e69d))
+
 ## [2.0.1](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.0.0...v2.0.1) (2024-07-18)
 
 
