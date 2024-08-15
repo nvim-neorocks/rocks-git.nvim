@@ -17,7 +17,7 @@ describe("Parser", function()
         end)
 
         it("Can recognize non-git URLs", function()
-            local url = "https://github.com/nvim-neorocks/rocks-git.nvim"
+            local url = "github.com/nvim-neorocks/rocks-git.nvim"
             assert.False(parser.is_git_url(url))
         end)
     end)
