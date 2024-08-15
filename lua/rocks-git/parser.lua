@@ -28,9 +28,7 @@ local parser = {}
 ---@param str string
 ---@return boolean
 function parser.is_git_url(str)
-    return vim.endswith(str, ".git") and str:match("^https?://") ~= nil
-        or str:match("^git@") ~= nil
-        or str:find("git%.sr%.ht") ~= nil
+    return str:match("^https?://") ~= nil or str:match("^git@") ~= nil
 end
 
 ---@param str string
