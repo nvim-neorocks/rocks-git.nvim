@@ -69,7 +69,7 @@
         luarc = pkgs.mk-luarc {
           nvim = pkgs.neovim-nightly;
           plugins = with pkgs.luajitPackages; [
-            rocks-nvim
+            inputs.rocks-nvim-flake.packages.${pkgs.system}.rocks-nvim
             nvim-nio
           ];
           disabled-diagnostics = [
