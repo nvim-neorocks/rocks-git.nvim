@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.0.2...v2.1.0) (2024-09-02)
+
+
+### Features
+
+* **experimental:** recognise rocks-git packages as dependencies ([#44](https://github.com/nvim-neorocks/rocks-git.nvim/issues/44)) ([702c84d](https://github.com/nvim-neorocks/rocks-git.nvim/commit/702c84d0f99a2551e12e7fa4c27582a268af6537))
+
 ## [2.0.2](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.0.1...v2.0.2) (2024-08-15)
 
 
