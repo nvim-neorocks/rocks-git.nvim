@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.1.0...v2.2.0) (2024-09-03)
+
+
+### Features
+
+* **experimental:** install rockspec dependencies ([#51](https://github.com/nvim-neorocks/rocks-git.nvim/issues/51)) ([0a2815a](https://github.com/nvim-neorocks/rocks-git.nvim/commit/0a2815a1c250d05e148f99027a25f2f4b6e5995f))
+
 ## [2.1.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.0.2...v2.1.0) (2024-09-02)
 
 
