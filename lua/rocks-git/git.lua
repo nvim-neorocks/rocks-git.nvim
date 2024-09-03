@@ -36,7 +36,7 @@ local function git_cli(args, on_exit, opts)
 end
 
 ---Clones the package.
----@param pkg Package
+---@param pkg rocks-git.Package
 ---@param on_exit fun(sc: vim.SystemCompleted)|nil Called asynchronously when the git command exits.
 ---@param opts? vim.SystemOpts
 ---@return vim.SystemObj
@@ -51,7 +51,7 @@ local function clone(pkg, on_exit, opts)
 end
 
 ---Clones the package.
----@param pkg Package
+---@param pkg rocks-git.Package
 ---@return nio.control.Future
 function git.clone(pkg)
     local future = nio.control.future()
@@ -68,7 +68,7 @@ function git.clone(pkg)
 end
 
 ---Checks out the `rev` specified by the package, if one is specified.
----@param pkg Package
+---@param pkg rocks-git.Package
 ---@param on_exit fun(sc: vim.SystemCompleted)|nil Called asynchronously when the git command exits.
 ---@return vim.SystemObj | nil
 ---@see vim.system
@@ -80,7 +80,7 @@ local function checkout(pkg, on_exit)
 end
 
 ---Checks out the `rev` specified by the package, if one is specified.
----@param pkg Package
+---@param pkg rocks-git.Package
 ---@return nio.control.Future | nil future Returns `nil` if the package doesn't have a `rev` attribute
 function git.checkout(pkg)
     if not pkg.rev then
@@ -100,7 +100,7 @@ function git.checkout(pkg)
 end
 
 ---Fetches updates to the package
----@param pkg Package
+---@param pkg rocks-git.Package
 ---@param on_exit fun(sc: vim.SystemCompleted)|nil Called asynchronously when the git command exits.
 ---@return vim.SystemObj | nil
 ---@see vim.system
@@ -112,11 +112,11 @@ local function fetch(pkg, on_exit)
 end
 
 ---Checks out the `rev` specified by the package, if one is specified.
----@param pkg Package
+---@param pkg rocks-git.Package
 ---@return nio.control.Future
 function git.fetch(pkg)
     local future = nio.control.future()
-    ---@cast pkg Package
+    ---@cast pkg rocks-git.Package
     fetch(pkg, function(sc)
         ---@cast sc vim.SystemCompleted
         if sc.code == 0 then
@@ -130,7 +130,7 @@ function git.fetch(pkg)
 end
 
 ---Pulls the package
----@param pkg Package
+---@param pkg rocks-git.Package
 ---@param on_exit fun(sc: vim.SystemCompleted)|nil Called asynchronously when the git command exits.
 ---@return vim.SystemObj | nil
 ---@see vim.system
@@ -142,7 +142,7 @@ local function pull(pkg, on_exit)
 end
 
 ---Pulls the package
----@param pkg Package
+---@param pkg rocks-git.Package
 ---@return nio.control.Future
 function git.pull(pkg)
     local future = nio.control.future()
@@ -169,7 +169,7 @@ local function read_line(path)
     end
 end
 
----@param pkg Package
+---@param pkg rocks-git.Package
 ---@return string | nil rev The git hash or tag that is currently checked out
 function git.get_rev(pkg)
     local git_dir = vim.fs.joinpath(pkg.dir, ".git")
@@ -182,7 +182,7 @@ function git.get_rev(pkg)
     return tag or read_line(vim.fs.joinpath(git_dir, head_ref))
 end
 
----@param pkg Package
+---@param pkg rocks-git.Package
 ---@return string | nil head The remote HEAD branch name
 function git.get_head_branch(pkg)
     local git_dir = vim.fs.joinpath(pkg.dir, ".git")
@@ -225,9 +225,9 @@ function git.get_latest_remote_semver_tag(url)
     return future
 end
 
----@type async fun(pkg: Package):boolean
+---@type async fun(pkg: rocks-git.Package):boolean
 git.is_outdated = nio.create(function(pkg)
-    ---@cast pkg Package
+    ---@cast pkg rocks-git.Package
     local future = nio.control.future()
     if not pkg.rev then
         git_cli({ "status", "--untracked-files=no" }, function(sc)
