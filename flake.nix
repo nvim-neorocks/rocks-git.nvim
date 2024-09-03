@@ -66,27 +66,31 @@
           ];
         };
 
-        luarc = pkgs.mk-luarc {
-          nvim = pkgs.neovim-nightly;
-          plugins = with pkgs.luajitPackages; [
-            inputs.rocks-nvim-flake.packages.${pkgs.system}.rocks-nvim
-            nvim-nio
-          ];
-          disabled-diagnostics = [
-            # caused by a nio luaCATS bug
-            "redundant-return-value"
-          ];
-        };
+        mk-luarc = nvim:
+          pkgs.mk-luarc {
+            nvim = pkgs.neovim-nightly;
+            plugins = with pkgs.luajitPackages; [
+              inputs.rocks-nvim-flake.packages.${pkgs.system}.rocks-nvim
+              nvim-nio
+            ];
+          };
 
-        type-check-nightly = pre-commit-hooks.lib.${system}.run {
-          src = self;
-          hooks = {
-            lua-ls = {
-              enable = true;
-              settings.configuration = luarc;
+        luarc-nightly = mk-luarc pkgs.neovim-nightly;
+        luarc-stable = mk-luarc pkgs.neovim-unwrapped;
+
+        mk-typecheck = luarc:
+          pre-commit-hooks.lib.${system}.run {
+            src = self;
+            hooks = {
+              lua-ls = {
+                enable = true;
+                settings.configuration = luarc;
+              };
             };
           };
-        };
+
+        type-check-nightly = mk-typecheck luarc-nightly;
+        type-check-stable = mk-typecheck luarc-stable;
 
         pre-commit-check = pre-commit-hooks.lib.${system}.run {
           src = self;
@@ -102,7 +106,7 @@
           name = "rocks-git.nvim devShell";
           shellHook = ''
             ${pre-commit-check.shellHook}
-            ln -fs ${pkgs.luarc-to-json luarc} .luarc.json
+            ln -fs ${pkgs.luarc-to-json luarc-nightly} .luarc.json
           '';
           buildInputs =
             self.checks.${system}.pre-commit-check.enabledPackages
@@ -133,6 +137,7 @@
           inherit
             pre-commit-check
             type-check-nightly
+            type-check-stable
             ;
           inherit (pkgs) integration-nightly;
         };
