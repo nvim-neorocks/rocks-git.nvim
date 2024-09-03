@@ -128,8 +128,8 @@ function parser.parse_install_args(args)
 end
 
 ---@param stdout string
----@return string?
----@return Version?
+---@return string | nil
+---@return vim.Version | nil
 function parser.parse_git_latest_semver_tag(stdout)
     local latest_tag = nil
     local latest_version = nil

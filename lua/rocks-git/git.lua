@@ -201,7 +201,7 @@ local function get_latest_remote_version_tag(url, on_exit)
     return git_cli(args, on_exit)
 end
 
----@alias tag_version_tuple { [1]: string?, [2]: Version?}
+---@alias tag_version_tuple { [1]: string?, [2]: vim.Version?}
 
 ---@param url string
 ---@return nio.control.Future
