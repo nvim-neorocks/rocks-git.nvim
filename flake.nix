@@ -112,6 +112,7 @@
             self.checks.${system}.pre-commit-check.enabledPackages
             ++ (with pkgs; [
               lua-language-server
+              docgen
             ])
             ++ oa.buildInputs;
           doCheck = false;

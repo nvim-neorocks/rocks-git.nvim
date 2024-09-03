@@ -65,12 +65,12 @@ local nio = require("nio")
 ---@brief ]]
 
 ---@package
----@class Package: PackageSpec
+---@class rocks-git.Package: PackageSpec
 ---@field dir string
 ---@field url string
 
 ---@param spec PackageSpec
----@return Package
+---@return rocks-git.Package
 local function mk_package(spec)
     return vim.tbl_deep_extend("keep", {
         url = parser.parse_git_url(spec.git),
@@ -205,11 +205,11 @@ rocks_git.get_update_callbacks = nio.create(function(mut_rocks_toml)
             return type(spec.git) == "string"
         end)
         :map(mk_package)
-        ---@param pkg Package
+        ---@param pkg rocks-git.Package
         :filter(function(pkg)
             return pkg.pin ~= true and (pkg.rev == nil or git.is_outdated(pkg))
         end)
-        ---@param pkg Package
+        ---@param pkg rocks-git.Package
         :map(function(pkg)
             ---@param on_progress fun(msg: string)
             ---@param on_error fun(msg: string)
