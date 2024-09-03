@@ -1,6 +1,12 @@
+---
+permissions:
+  contents: write
+  pull-requests: write
+
 name: Release Please
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -10,9 +16,7 @@ jobs:
     name: release
     runs-on: ubuntu-latest
     steps:
-      - uses: google-github-actions/release-please-action@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
+      - uses: googleapis/release-please-action@v4
         with:
           release-type: simple
-          package-name: rocks-git.nvim
+          token: ${{ secrets.PAT }}
