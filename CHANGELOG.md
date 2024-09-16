@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.3.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.2.0...v2.3.0) (2024-09-16)
+
+
+### Features
+
+* **install:** pin current revision if no semver tag is found ([#56](https://github.com/nvim-neorocks/rocks-git.nvim/issues/56)) ([5e0a3f8](https://github.com/nvim-neorocks/rocks-git.nvim/commit/5e0a3f84fe0eb8c77d28aea4d1ec63e930b65d66))
+
+
+### Bug Fixes
+
+* **sync:** install unpinned packages if they are not installed ([#55](https://github.com/nvim-neorocks/rocks-git.nvim/issues/55)) ([a127bbd](https://github.com/nvim-neorocks/rocks-git.nvim/commit/a127bbd3f10b4ddb850bb6d30ac2143602d04543))
+
 ## [2.2.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.1.0...v2.2.0) (2024-09-03)
 
 
