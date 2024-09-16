@@ -75,7 +75,7 @@ operations.install = nio.create(function(on_progress, on_error, on_success, pkg)
     if pkg.rev then
         on_progress(("rocks-git: %s -> %s"):format(pkg.name, pkg.rev))
     else
-        on_progress(("rocks-git: %s (Unpinned)"):format(pkg.name))
+        on_progress(("rocks-git: %s (latest)"):format(pkg.name))
     end
     local future = git.clone(pkg)
     local ok = pcall(future.wait)
@@ -184,7 +184,7 @@ operations.sync = nio.create(function(on_progress, on_error, on_success, pkg)
         ensure_installed(on_progress, on_error, on_success, pkg)
         return
     end
-    local rev = git.get_rev(pkg)
+    local rev = git.get_checked_out_rev(pkg)
     if rev == pkg.rev then
         return
     else
@@ -208,12 +208,12 @@ end, 4)
 operations.update = nio.create(function(on_progress, on_error, on_success, pkg)
     local version_tuple = git.get_latest_remote_semver_tag(pkg.url).wait()
     ---@cast version_tuple tag_version_tuple
-    local prev = pkg.rev or git.get_rev(pkg)
+    local prev = pkg.rev or git.get_checked_out_rev(pkg)
     pkg.rev = version_tuple[1]
     local ok
     if not pkg.rev then
         ok = update_pull(nil, on_error, pkg)
-        pkg.rev = git.get_rev(pkg)
+        pkg.rev = git.get_checked_out_rev(pkg)
     else
         ok = update_to_rev(on_progress, on_error, pkg)
     end

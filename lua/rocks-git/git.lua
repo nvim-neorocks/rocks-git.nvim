@@ -171,7 +171,7 @@ end
 
 ---@param pkg rocks-git.Package
 ---@return string | nil rev The git hash or tag that is currently checked out
-function git.get_rev(pkg)
+function git.get_checked_out_rev(pkg)
     local git_dir = vim.fs.joinpath(pkg.dir, ".git")
     local head_ref = read_line(vim.fs.joinpath(git_dir, "HEAD"))
     if not head_ref then
