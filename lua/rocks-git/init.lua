@@ -167,6 +167,9 @@ rocks_git.get_install_callback = nio.create(function(mut_rocks_toml, arg_list)
         end
         local ok = operations.install(on_progress, on_error, on_success, pkg)
         if ok then
+            if not pkg.rev then
+                pkg.rev = git.get_checked_out_rev(pkg)
+            end
             mut_update_rocks_toml(mut_rocks_toml, pkg)
         end
     end, 2)
