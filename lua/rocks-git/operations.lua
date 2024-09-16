@@ -169,8 +169,19 @@ end
 ---@param on_error fun(message: string)
 ---@param on_success? fun(opts: rock_handler.on_success.Opts) | nil
 ---@param pkg rocks-git.Package
+local function ensure_installed(on_progress, on_error, on_success, pkg)
+    if not vim.uv.fs_stat(pkg.dir) then
+        operations.install(on_progress, on_error, on_success, pkg)
+    end
+end
+
+---@param on_progress fun(message: string)
+---@param on_error fun(message: string)
+---@param on_success? fun(opts: rock_handler.on_success.Opts) | nil
+---@param pkg rocks-git.Package
 operations.sync = nio.create(function(on_progress, on_error, on_success, pkg)
     if not pkg.rev then
+        ensure_installed(on_progress, on_error, on_success, pkg)
         return
     end
     local rev = git.get_rev(pkg)
