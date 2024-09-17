@@ -24,7 +24,7 @@ local nio = require("nio")
 ---@param args string[] git CLI arguments
 ---@param on_exit fun(sc: vim.SystemCompleted)|nil Called asynchronously when the git command exits.
 ---@param opts? vim.SystemOpts
----@return vim.SystemObj
+---@return vim.SystemObj | nil
 ---@see vim.system
 local function git_cli(args, on_exit, opts)
     opts = opts or {}
@@ -32,14 +32,30 @@ local function git_cli(args, on_exit, opts)
         "git",
     }, args)
     log.info(git_cmd)
-    return vim.system(git_cmd, opts, on_exit)
+    ---@type boolean, vim.SystemObj | string
+    local ok, so_or_err = pcall(vim.system, git_cmd, opts, on_exit)
+    if ok then
+        ---@cast so_or_err vim.SystemObj
+        return so_or_err
+    else
+        ---@cast so_or_err string
+        ---@type vim.SystemCompleted
+        local sc = {
+            code = 1,
+            signal = 0,
+            stderr = ("Failed to invoke git: %s"):format(so_or_err),
+        }
+        if on_exit then
+            on_exit(sc)
+        end
+    end
 end
 
 ---Clones the package.
 ---@param pkg rocks-git.Package
 ---@param on_exit fun(sc: vim.SystemCompleted)|nil Called asynchronously when the git command exits.
 ---@param opts? vim.SystemOpts
----@return vim.SystemObj
+---@return vim.SystemObj | nil
 ---@see vim.system
 local function clone(pkg, on_exit, opts)
     local args = { "clone", pkg.url, "--recurse-submodules", "--shallow-submodules", "--no-single-branch" }
@@ -196,6 +212,7 @@ end
 
 ---@param url string
 ---@param on_exit fun(sc: vim.SystemCompleted)|nil Called asynchronously when the git command exits.
+---@return vim.SystemObj | nil
 local function get_latest_remote_version_tag(url, on_exit)
     local args = { "ls-remote", "--tags", url }
     return git_cli(args, on_exit)

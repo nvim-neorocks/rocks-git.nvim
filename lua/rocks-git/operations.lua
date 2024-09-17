@@ -49,18 +49,28 @@ local function build_if_required(on_progress, on_error, pkg)
         end
         log.info(cmd)
         local future = nio.control.future()
-        vim.system(cmd, { cwd = pkg.dir }, function(sc)
-            ---@cast sc vim.SystemCompleted
+        ---@param sc vim.SystemCompleted
+        local function callback(sc)
             if sc.code == 0 then
                 future.set(true)
             else
                 log.error(sc.stderr)
                 future.set_error(sc.stderr)
             end
-        end)
-        local ok = pcall(future.wait)
+        end
+        local ok, err = pcall(vim.system, cmd, { cwd = pkg.dir }, callback)
         if not ok then
-            on_error(("rocks-git: Failed to build %s"):format(pkg.name))
+            ---@type vim.SystemCompleted
+            local sc = {
+                code = 1,
+                signal = 0,
+                stderr = ("Failed to invoke %s.build: %s"):format(pkg.name, err),
+            }
+            callback(sc)
+        end
+        ok, err = pcall(future.wait)
+        if not ok then
+            on_error(("rocks-git: Failed to build %s: %s"):format(pkg.name, err))
             return false
         end
     end
