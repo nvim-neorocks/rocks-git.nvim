@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.3.0...v2.3.1) (2024-09-17)
+
+
+### Bug Fixes
+
+* prevent `vim.system` panics ([#58](https://github.com/nvim-neorocks/rocks-git.nvim/issues/58)) ([b9e820c](https://github.com/nvim-neorocks/rocks-git.nvim/commit/b9e820c45b6d78d723c58985012f0fe87e5decee))
+
 ## [2.3.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.2.0...v2.3.0) (2024-09-16)
 
 
