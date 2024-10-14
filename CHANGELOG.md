@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.2](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.3.1...v2.3.2) (2024-10-14)
+
+
+### Bug Fixes
+
+* set cwd when cloning repositories ([#60](https://github.com/nvim-neorocks/rocks-git.nvim/issues/60)) ([7c5c476](https://github.com/nvim-neorocks/rocks-git.nvim/commit/7c5c4764012c51343347a4eaf4dff55d96d80473))
+
 ## [2.3.1](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.3.0...v2.3.1) (2024-09-17)
 
 
