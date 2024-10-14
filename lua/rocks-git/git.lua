@@ -54,16 +54,20 @@ end
 ---Clones the package.
 ---@param pkg rocks-git.Package
 ---@param on_exit fun(sc: vim.SystemCompleted)|nil Called asynchronously when the git command exits.
----@param opts? vim.SystemOpts
 ---@return vim.SystemObj | nil
 ---@see vim.system
-local function clone(pkg, on_exit, opts)
+local function clone(pkg, on_exit)
     local args = { "clone", pkg.url, "--recurse-submodules", "--shallow-submodules", "--no-single-branch" }
     if pkg.branch then
         vim.list_extend(args, { "-b", pkg.branch })
     end
-    table.insert(args, pkg.dir)
-    return git_cli(args, on_exit, opts)
+    table.insert(args, vim.fs.basename(pkg.dir))
+    return git_cli(args, on_exit, {
+        -- This is always the 'start' or 'opt' directory.
+        -- Setting the cwd should prevent issues like
+        -- https://github.com/nvim-neorocks/rocks.nvim/issues/554#
+        cwd = vim.fs.dirname(pkg.dir),
+    })
 end
 
 ---Clones the package.
