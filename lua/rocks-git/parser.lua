@@ -152,7 +152,8 @@ function parser.is_version(rev)
     if tonumber(rev) then
         return true
     end
-    return vim.iter(vim.gsplit(rev, ".", { plain = true })):all(function(str)
+    local version_str = rev:gsub("v", "")
+    return vim.iter(vim.gsplit(version_str, ".", { plain = true })):all(function(str)
         return tonumber(str) ~= nil
     end)
 end
