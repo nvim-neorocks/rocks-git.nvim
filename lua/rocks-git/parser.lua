@@ -134,13 +134,37 @@ function parser.parse_git_latest_semver_tag(stdout)
     local latest_tag = nil
     local latest_version = nil
     for tag in stdout:gmatch("refs/tags/([^\n]+)") do
-        local ok, version = pcall(vim.version.parse, tag)
-        if ok then
+        local version = parser.get_version(tag)
+        if version then
             latest_tag = tag
             latest_version = version
         end
     end
     return latest_tag, latest_version
+end
+
+---@param rev string?
+---@return boolean
+function parser.is_version(rev)
+    if not rev then
+        return false
+    end
+    if tonumber(rev) then
+        return true
+    end
+    return vim.iter(vim.gsplit(rev, ".", { plain = true })):all(function(str)
+        return tonumber(str) ~= nil
+    end)
+end
+
+---@param rev string?
+---@return vim.Version?
+function parser.get_version(rev)
+    if not parser.is_version(rev) then
+        return
+    end
+    local ok, version = pcall(vim.version.parse, rev)
+    return ok and version or nil
 end
 
 return parser

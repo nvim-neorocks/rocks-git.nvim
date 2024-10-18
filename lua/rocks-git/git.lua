@@ -250,7 +250,8 @@ end
 git.is_outdated = nio.create(function(pkg)
     ---@cast pkg rocks-git.Package
     local future = nio.control.future()
-    if not pkg.rev then
+    local version = vim.print(parser.get_version(pkg.rev))
+    if not version then
         git_cli({ "status", "--untracked-files=no" }, function(sc)
             if sc.code ~= 0 then
                 log.error(sc)
@@ -261,19 +262,15 @@ git.is_outdated = nio.create(function(pkg)
         end, { cwd = pkg.dir })
         return future.wait()
     end
-    local is_semver, version = pcall(vim.version.parse, pkg.rev)
-    if is_semver and version then
-        local version_tuple = git.get_latest_remote_semver_tag(pkg.url).wait()
-        ---@cast version_tuple tag_version_tuple
-        local latest_version = version_tuple[2]
-        if not latest_version then
-            log.error(("rocks-git: could not determine latest version for %s"):format(vim.inspect(pkg)))
-            return false
-        end
-        return version:__lt(latest_version)
+    ---@cast version vim.Version
+    local version_tuple = git.get_latest_remote_semver_tag(pkg.url).wait()
+    ---@cast version_tuple tag_version_tuple
+    local latest_version = version_tuple[2]
+    if not latest_version then
+        log.error(("rocks-git: could not determine latest version for %s"):format(vim.inspect(pkg)))
+        return false
     end
-    log.info(("rocks-git: rev is not semver. Cannot determine if outdated: %s"):format(vim.inspect(pkg)))
-    return false
+    return version:__lt(latest_version)
 end, 1)
 
 return git
