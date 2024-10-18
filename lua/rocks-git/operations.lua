@@ -211,6 +211,16 @@ operations.sync = nio.create(function(on_progress, on_error, on_success, pkg)
     end
 end, 4)
 
+---@param pkg rocks-git.Package
+---@return boolean
+local function is_semver(pkg)
+    if not pkg.rev then
+        return false
+    end
+    local ok, version = pcall(vim.version.parse, pkg.rev)
+    return ok and version ~= nil
+end
+
 ---@param on_progress fun(message: string)
 ---@param on_error fun(message: string)
 ---@param on_success? fun(opts: rock_handler.on_success.Opts) | nil
@@ -219,6 +229,10 @@ operations.update = nio.create(function(on_progress, on_error, on_success, pkg)
     local version_tuple = git.get_latest_remote_semver_tag(pkg.url).wait()
     ---@cast version_tuple tag_version_tuple
     local prev = pkg.rev or git.get_checked_out_rev(pkg)
+    if vim.tbl_isempty(version_tuple) and is_semver(pkg) then
+        log.info(("Latest remote tag is not semver, but %s is pinned to a semver version. Skipping"):format(pkg.name))
+        return
+    end
     pkg.rev = version_tuple[1]
     local ok
     if not pkg.rev then
