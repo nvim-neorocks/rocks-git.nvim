@@ -24,6 +24,7 @@ local parser = {}
 ---@field rev? string Git revision or tag to checkout.
 ---@field branch? string Git branch to checkout.
 ---@field build? string Shell or Vimscript command to run after install/update. Will run a vim command if prefixed with ':'.
+---@field ignore_tags? boolean Ignore tags when updating and prioritise git revisions.
 
 ---@param str string
 ---@return boolean
@@ -83,6 +84,7 @@ local GitInstallSpecField = {
     opt = str_to_bool,
     branch = tostring,
     build = tostring,
+    ignore_tags = str_to_bool,
 }
 
 ---@class ParseInstallArgsResult

@@ -52,6 +52,7 @@ local nio = require("nio")
 ---@field rev? string Git revision or tag to checkout.
 ---@field branch? string Git branch to checkout.
 ---@field build? string Shell or Vimscript command to run after install/update. Will run a vim command if prefixed with ':'.
+---@field ignore_tags? boolean Ignore tags when updating and prioritise git revisions.
 
 ---@brief [[
 ---
@@ -131,7 +132,7 @@ rocks_git.get_install_callback = nio.create(function(mut_rocks_toml, arg_list)
             return false
         end
 
-        if not checkout_spec.rev then
+        if not checkout_spec.rev and not checkout_spec.ignore_tags then
             on_progress(("rocks-git: fetching %s tags from remote"):format(name))
             local version_tuple = git.get_latest_remote_semver_tag(parser.parse_git_url(git_rock)).wait()
             ---@cast version_tuple tag_version_tuple

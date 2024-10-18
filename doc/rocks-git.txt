@@ -33,12 +33,13 @@ Arguments:
 PackageSpec : RockSpec                                             *PackageSpec*
 
     Fields: ~
-        {name}     (string)   Name of the plugin.
-        {git}      (string)   Git short name, e.g. 'nvim-neorocks/rocks-git.nvim', or a git URL.
-        {opt?}     (boolean)  If 'true', will not be loaded on startup. Can be loaded manually with `:packadd!`.
-        {rev?}     (string)   Git revision or tag to checkout.
-        {branch?}  (string)   Git branch to checkout.
-        {build?}   (string)   Shell or Vimscript command to run after install/update. Will run a vim command if prefixed with ':'.
+        {name}          (string)   Name of the plugin.
+        {git}           (string)   Git short name, e.g. 'nvim-neorocks/rocks-git.nvim', or a git URL.
+        {opt?}          (boolean)  If 'true', will not be loaded on startup. Can be loaded manually with `:packadd!`.
+        {rev?}          (string)   Git revision or tag to checkout.
+        {branch?}       (string)   Git branch to checkout.
+        {build?}        (string)   Shell or Vimscript command to run after install/update. Will run a vim command if prefixed with ':'.
+        {ignore_tags?}  (boolean)  Ignore tags when updating and prioritise git revisions.
 
 
 

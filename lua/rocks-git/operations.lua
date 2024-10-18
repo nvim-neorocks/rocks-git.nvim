@@ -223,7 +223,7 @@ end, 4)
 ---@param on_success? fun(opts: rock_handler.on_success.Opts) | nil
 ---@param pkg rocks-git.Package
 operations.update = nio.create(function(on_progress, on_error, on_success, pkg)
-    local version_tuple = git.get_latest_remote_semver_tag(pkg.url).wait()
+    local version_tuple = pkg.ignore_tags and {} or git.get_latest_remote_semver_tag(pkg.url).wait()
     ---@cast version_tuple tag_version_tuple
     local prev = pkg.rev or git.get_checked_out_rev(pkg)
     if vim.tbl_isempty(version_tuple) and parser.is_version(pkg.rev) then
