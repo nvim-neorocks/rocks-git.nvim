@@ -19,6 +19,7 @@ local operations = {}
 
 local git = require("rocks-git.git")
 local rockspec = require("rocks-git.rockspec")
+local parser = require("rocks-git.parser")
 local log = require("rocks.log")
 local nio = require("nio")
 
@@ -109,7 +110,7 @@ operations.install = nio.create(function(on_progress, on_error, on_success, pkg)
             on_progress(("rocks-git: Installed %s"):format(pkg.name))
         end
         if type(on_success) == "function" then
-            local is_semver = pkg.rev and pcall(vim.version.parse, pkg.rev)
+            local is_semver = parser.is_version(pkg.rev)
             on_success({
                 action = "install",
                 rock = {
@@ -162,7 +163,7 @@ end, 3)
 ---@param pkg rocks-git.Package
 ---@param on_success? fun(opts: rock_handler.on_success.Opts) | nil
 local function install_semver_stub(pkg, on_success)
-    local is_semver = pkg.rev and pcall(vim.version.parse, pkg.rev)
+    local is_semver = parser.is_version(pkg.rev)
     if is_semver and type(on_success) == "function" then
         on_success({
             action = "install",
@@ -211,16 +212,6 @@ operations.sync = nio.create(function(on_progress, on_error, on_success, pkg)
     end
 end, 4)
 
----@param pkg rocks-git.Package
----@return boolean
-local function is_semver(pkg)
-    if not pkg.rev then
-        return false
-    end
-    local ok, version = pcall(vim.version.parse, pkg.rev)
-    return ok and version ~= nil
-end
-
 ---@param on_progress fun(message: string)
 ---@param on_error fun(message: string)
 ---@param on_success? fun(opts: rock_handler.on_success.Opts) | nil
@@ -229,7 +220,7 @@ operations.update = nio.create(function(on_progress, on_error, on_success, pkg)
     local version_tuple = git.get_latest_remote_semver_tag(pkg.url).wait()
     ---@cast version_tuple tag_version_tuple
     local prev = pkg.rev or git.get_checked_out_rev(pkg)
-    if vim.tbl_isempty(version_tuple) and is_semver(pkg) then
+    if vim.tbl_isempty(version_tuple) and parser.is_version(pkg.rev) then
         log.info(("Latest remote tag is not semver, but %s is pinned to a semver version. Skipping"):format(pkg.name))
         return
     end
