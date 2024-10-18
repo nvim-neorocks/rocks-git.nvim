@@ -89,11 +89,12 @@ end
 
 ---Checks out the `rev` specified by the package, if one is specified.
 ---@param pkg rocks-git.Package
----@param on_exit fun(sc: vim.SystemCompleted)|nil Called asynchronously when the git command exits.
+---@param ref? string
+---@param on_exit? fun(sc: vim.SystemCompleted) Called asynchronously when the git command exits.
 ---@return vim.SystemObj | nil
 ---@see vim.system
-local function checkout(pkg, on_exit)
-    local args = { "checkout", pkg.rev, "--force", "--recurse-submodules" }
+local function checkout(pkg, ref, on_exit)
+    local args = { "checkout", ref or pkg.rev, "--force", "--recurse-submodules" }
     return git_cli(args, on_exit, {
         cwd = pkg.dir,
     })
@@ -107,7 +108,7 @@ function git.checkout(pkg)
         return
     end
     local future = nio.control.future()
-    checkout(pkg, function(sc)
+    checkout(pkg, nil, function(sc)
         ---@cast sc vim.SystemCompleted
         if sc.code == 0 then
             future.set(true)
@@ -159,6 +160,29 @@ local function pull(pkg, on_exit)
     return git_cli(args, on_exit, {
         cwd = pkg.dir,
     })
+end
+
+---@param pkg rocks-git.Package
+---@return nio.control.Future
+function git.ensure_head_branch(pkg)
+    local future = nio.control.future()
+    local head_branch = git.get_head_branch(pkg)
+    if head_branch then
+        checkout(pkg, head_branch, function(sc)
+            ---@cast sc vim.SystemCompleted
+            if sc.code == 0 then
+                future.set(true)
+            else
+                log.error({ "Could not checkout HEAD branch", head_branch, sc })
+                future.set_error(sc.stderr)
+            end
+        end)
+    else
+        local error_msg = "Could not determine remote HEAD branch."
+        log.error(error_msg)
+        future.set_error(error_msg)
+    end
+    return future
 end
 
 ---Pulls the package

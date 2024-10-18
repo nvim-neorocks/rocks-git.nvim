@@ -130,8 +130,14 @@ end, 4)
 ---@param pkg rocks-git.Package
 ---@return boolean
 local update_pull = nio.create(function(on_progress, on_error, pkg)
-    local future = git.pull(pkg)
+    local future = git.ensure_head_branch(pkg)
     local ok = pcall(future.wait)
+    if not ok then
+        on_error(("rocks-git: Failed to checkout HEAD branch of %s"):format(pkg.name))
+        return ok
+    end
+    future = git.pull(pkg)
+    ok = pcall(future.wait)
     if not ok then
         on_error(("rocks-git: Failed to pull %s"):format(pkg.name))
         return ok
