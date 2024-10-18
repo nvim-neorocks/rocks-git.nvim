@@ -81,14 +81,15 @@ If a plugin is not pinned to a revision or tag with the `rev` field,
 The following fields can be set in a `rocks.toml` entry
 that is managed by this plugin:
 
-| Field    | Type      | Required?             | Description                                                                                          |
-|:--       |:--        |:--                    |:--                                                                                                   |
-| `name`   | `string`  | Yes                   | Name of the plugin                                                                                   |
-| `git`    | `string`  | Yes                   | Git short name[^1], e.g. `"nvim-neorocks/rocks-git.nvim"` or a git URL.                              |
-| `opt`    | `boolean` | No (default: `false`) | Plugins with `opt = true` will not be loaded on startup. See `:h packadd`                            |
-| `rev`    | `string`  | No                    | Git revision or tag to checkout                                                                      |
-| `branch` | `string`  | No                    | Git branch to checkout                                                                               |
-| `build`  | `string`  | No                    | Shell or Vimscript command to run after install/update. Will run a vim command if prefixed with `:`  |
+| Field          | Type      | Required?             | Description                                                                                          |
+|:--             |:--        |:--                    |:--                                                                                                   |
+| `name`         | `string`  | Yes                   | Name of the plugin                                                                                   |
+| `git`          | `string`  | Yes                   | Git short name[^1], e.g. `"nvim-neorocks/rocks-git.nvim"` or a git URL.                              |
+| `opt`          | `boolean` | No (default: `false`) | Plugins with `opt = true` will not be loaded on startup. See `:h packadd`                            |
+| `rev`          | `string`  | No                    | Git revision or tag to checkout                                                                      |
+| `branch`       | `string`  | No                    | Git branch to checkout                                                                               |
+| `build`        | `string`  | No                    | Shell or Vimscript command to run after install/update. Will run a vim command if prefixed with `:`  |
+| `ignore_tags`  | `boolean` | No (default: `false`) | `rocks-git.nvim` prioritises semver tags by default. This option disables that behaviour. |
 
 [^1]: Also supports `github:`, `gitlab:`, `codeberg:` and `sourcehut:` prefixes, e.g. `gitlab:owner/repo` (HTTPS only).
 

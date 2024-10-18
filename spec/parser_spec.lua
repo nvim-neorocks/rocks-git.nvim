@@ -100,8 +100,8 @@ describe("Parser", function()
         it("Parses GitInstallSpec from arg list", function()
             assert.same({ rev = "1.0.0" }, parser.parse_install_args({ "rev=1.0.0" }).spec)
             assert.same(
-                { rev = "1.0.0", opt = true, branch = "main", build = "foo" },
-                parser.parse_install_args({ "rev=1.0.0", "opt=true", "branch=main", "build=foo" }).spec
+                { rev = "1.0.0", opt = true, branch = "main", build = "foo", ignore_tags = true },
+                parser.parse_install_args({ "rev=1.0.0", "opt=true", "branch=main", "build=foo", "ignore_tags=true" }).spec
             )
         end)
 
