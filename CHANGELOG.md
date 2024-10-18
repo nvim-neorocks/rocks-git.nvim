@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.4.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.3.2...v2.4.0) (2024-10-18)
+
+
+### Features
+
+* `ignore_tags` option ([#67](https://github.com/nvim-neorocks/rocks-git.nvim/issues/67)) ([fdf945b](https://github.com/nvim-neorocks/rocks-git.nvim/commit/fdf945ba7ee26ff1db2ae5acb3683c472817c537))
+
+
+### Bug Fixes
+
+* **update:** don't overwrite semver tag if latest tag is not semver ([fca321d](https://github.com/nvim-neorocks/rocks-git.nvim/commit/fca321d20e87298d0ff92efb1d4f1cfe9296f929))
+* **update:** non-semver packages with no branch checked out fail to update ([93cd2c3](https://github.com/nvim-neorocks/rocks-git.nvim/commit/93cd2c34e1cb80ed6866454c3c3927f0d7158cb3))
+* **update:** packages with non-semver rev not updated ([#64](https://github.com/nvim-neorocks/rocks-git.nvim/issues/64)) ([796b36a](https://github.com/nvim-neorocks/rocks-git.nvim/commit/796b36a5395ddade760bd37e63658ba862b0fdb8))
+
 ## [2.3.2](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.3.1...v2.3.2) (2024-10-14)
 
 
