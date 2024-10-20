@@ -35,5 +35,13 @@ local user_configuration = rocks.get_rocks_toml()
 
 local config = vim.tbl_deep_extend("force", default_config, user_configuration["rocks-git"] or {})
 
+for _, dir in pairs({ "start", "opt" }) do
+    local package_dir = vim.fs.joinpath(config.path, dir)
+    if not vim.uv.fs_stat(package_dir) then
+        -- XXX: rocks.fs is an internal module
+        require("rocks.fs").mkdir_p(package_dir)
+    end
+end
+
 ---@type RocksGitConfig
 return config
