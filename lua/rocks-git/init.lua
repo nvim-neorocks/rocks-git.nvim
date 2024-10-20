@@ -95,6 +95,8 @@ local function mut_update_rocks_toml(rocks_toml, spec)
     rocks_toml.plugins[spec.name].branch = spec.branch
     ---@diagnostic disable-next-line: inject-field
     rocks_toml.plugins[spec.name].build = spec.build
+    ---@diagnostic disable-next-line: inject-field
+    rocks_toml.plugins[spec.name].ignore_tags = spec.ignore_tags
 end
 
 ---@package
