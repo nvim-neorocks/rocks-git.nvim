@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.2](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.4.1...v2.4.2) (2024-10-20)
+
+
+### Bug Fixes
+
+* `ignore_tags` field removed on update ([#72](https://github.com/nvim-neorocks/rocks-git.nvim/issues/72)) ([699a701](https://github.com/nvim-neorocks/rocks-git.nvim/commit/699a701d121f82ac3c6eb8c6f9893fc203745fce))
+
 ## [2.4.1](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.4.0...v2.4.1) (2024-10-20)
 
 
