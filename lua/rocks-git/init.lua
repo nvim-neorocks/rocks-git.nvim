@@ -152,16 +152,10 @@ rocks_git.get_install_callback = nio.create(function(mut_rocks_toml, arg_list)
         }
         local pkg = mk_package(spec)
         if vim.uv.fs_stat(pkg.dir) then
-            local future = nio.control.future()
-            vim.schedule(function()
-                vim.ui.input({
-                    prompt = ("%s is already checked out. Delete and reinstall? [y/n] "):format(pkg.name),
-                }, function(yesno)
-                    future.set(yesno and yesno:match("^y.*") ~= nil or false)
-                end)
-            end)
-            local reinstall = future.wait()
-            if reinstall then
+            local prompt = ("%s is already checked out. Delete and reinstall?"):format(pkg.name)
+            nio.scheduler()
+            local choice = vim.fn.confirm(prompt, "&Yes\n&No", 2, "Question")
+            if choice == 1 then
                 operations.prune(pkg.dir)
             else
                 on_error("rocks-git: Installation aborted.")
