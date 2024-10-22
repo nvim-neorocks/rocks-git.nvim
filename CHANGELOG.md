@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.5.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.4.2...v2.5.0) (2024-10-22)
+
+
+### Features
+
+* use `vim.fn.confirm` instead of hand-rolled `vim.ui.input` ([#77](https://github.com/nvim-neorocks/rocks-git.nvim/issues/77)) ([84dbb80](https://github.com/nvim-neorocks/rocks-git.nvim/commit/84dbb806079c7bde378cb35185be83f4e4bc359f))
+
+
+### Bug Fixes
+
+* don't fetch latest semver tag if `branch` is set ([#75](https://github.com/nvim-neorocks/rocks-git.nvim/issues/75)) ([7ffc0a8](https://github.com/nvim-neorocks/rocks-git.nvim/commit/7ffc0a82e3f24831315f72c340ec9789eea5583d))
+
 ## [2.4.2](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.4.1...v2.4.2) (2024-10-20)
 
 
