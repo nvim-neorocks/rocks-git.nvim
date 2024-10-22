@@ -134,7 +134,7 @@ rocks_git.get_install_callback = nio.create(function(mut_rocks_toml, arg_list)
             return false
         end
 
-        if not checkout_spec.rev and not checkout_spec.ignore_tags then
+        if not checkout_spec.rev and not checkout_spec.ignore_tags and not checkout_spec.branch then
             on_progress(("rocks-git: fetching %s tags from remote"):format(name))
             local version_tuple = git.get_latest_remote_semver_tag(parser.parse_git_url(git_rock)).wait()
             ---@cast version_tuple tag_version_tuple
