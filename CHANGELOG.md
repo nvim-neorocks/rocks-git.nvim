@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.1](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.5.0...v2.5.1) (2024-10-31)
+
+
+### Bug Fixes
+
+* unset `GIT_DIR` and `GIT_WORK_TREE` environment variables when invoking `git` ([#79](https://github.com/nvim-neorocks/rocks-git.nvim/issues/79)) ([03a3f41](https://github.com/nvim-neorocks/rocks-git.nvim/commit/03a3f41054593828d811c8e39f0dfb8bc0167c69))
+
 ## [2.5.0](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.4.2...v2.5.0) (2024-10-22)
 
 
