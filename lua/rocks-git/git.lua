@@ -28,6 +28,10 @@ local nio = require("nio")
 ---@see vim.system
 local function git_cli(args, on_exit, opts)
     opts = opts or {}
+    opts.env = opts.env or {}
+    -- Edge case, see https://github.com/nvim-neorocks/rocks-git.nvim/issues/78
+    opts.env.GIT_DIR = nil
+    opts.env.GIT_WORK_TREE = nil
     local git_cmd = vim.list_extend({
         "git",
     }, args)
