@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.2](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.5.1...v2.5.2) (2024-12-09)
+
+
+### Bug Fixes
+
+* compare versions when getting latest tag ([da06852](https://github.com/nvim-neorocks/rocks-git.nvim/commit/da06852ed878c0777ed9c080f3ca010a48538ab5))
+
 ## [2.5.1](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.5.0...v2.5.1) (2024-10-31)
 
 
