@@ -137,7 +137,10 @@ function parser.parse_git_latest_semver_tag(stdout)
     local latest_version = nil
     for tag in stdout:gmatch("refs/tags/([^\n]+)") do
         local version = parser.get_version(tag)
-        if version then
+        if version and latest_version and version > latest_version then
+            latest_tag = tag
+            latest_version = version
+        elseif version and not latest_version then
             latest_tag = tag
             latest_version = version
         end
