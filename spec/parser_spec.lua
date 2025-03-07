@@ -66,27 +66,39 @@ describe("Parser", function()
             local url = "nvim-neorocks/rocks-git.nvim"
             assert.same("rocks-git.nvim", parser.plugin_name_from_git_uri(url))
         end)
+
+        it("[non-regression] Can get plugin name that ends in '-git'", function()
+            local url = "https://github.com/nvim-neorocks/foo-git.git"
+            assert.same("foo-git", parser.plugin_name_from_git_uri(url))
+            url = "https://github.com/nvim-neorocks/foo-git"
+            assert.same("foo-git", parser.plugin_name_from_git_uri(url))
+        end)
     end)
 
     describe("parse_git_url", function()
-        it("Can parse SSH URL from GitHub shorthand without a prefix", function()
+        it("Can parse URL from GitHub shorthand without a prefix", function()
             local shorthand = "nvim-neorocks/rocks-git.nvim"
             local url = "https://github.com/nvim-neorocks/rocks-git.nvim.git"
             assert.same(url, parser.parse_git_url(shorthand))
         end)
-        it("Can parse SSH URL from GitHub shorthand with a prefix", function()
+        it("Can parse URL from GitHub shorthand with a prefix", function()
             local shorthand = "github:nvim-neorocks/rocks-git.nvim"
             local url = "https://github.com/nvim-neorocks/rocks-git.nvim.git"
             assert.same(url, parser.parse_git_url(shorthand))
         end)
-        it("Can parse SSH URL from GitLab shorthand with a prefix", function()
+        it("Can parse URL from GitLab shorthand with a prefix", function()
             local shorthand = "gitlab:nvim-neorocks/rocks-git.nvim"
             local url = "https://gitlab.com/nvim-neorocks/rocks-git.nvim.git"
             assert.same(url, parser.parse_git_url(shorthand))
         end)
-        it("Can parse SSH URL from sourcehut shorthand with a prefix", function()
+        it("Can parse URL from sourcehut shorthand with a prefix", function()
             local shorthand = "sourcehut:nvim-neorocks/rocks-git.nvim"
             local url = "https://git.sr.ht/~nvim-neorocks/rocks-git.nvim"
+            assert.same(url, parser.parse_git_url(shorthand))
+        end)
+        it("Can parse URL from shorthand ending in '-git'", function()
+            local shorthand = "nvim-neorocks/foo-git"
+            local url = "https://github.com/nvim-neorocks/foo-git.git"
             assert.same(url, parser.parse_git_url(shorthand))
         end)
     end)
