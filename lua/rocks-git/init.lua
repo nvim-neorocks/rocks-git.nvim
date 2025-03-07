@@ -128,7 +128,8 @@ rocks_git.get_install_callback = nio.create(function(mut_rocks_toml, arg_list)
         end
         local checkout_spec = parse_result.spec
 
-        local name = parser.plugin_name_from_git_uri(git_rock)
+        local git_url = parser.parse_git_url(git_rock)
+        local name = parser.plugin_name_from_git_uri(git_url)
         if not name then
             on_error(("rocks-git: Could not infer plugin name from %s"):format(git_rock))
             return false
@@ -136,7 +137,7 @@ rocks_git.get_install_callback = nio.create(function(mut_rocks_toml, arg_list)
 
         if not checkout_spec.rev and not checkout_spec.ignore_tags and not checkout_spec.branch then
             on_progress(("rocks-git: fetching %s tags from remote"):format(name))
-            local version_tuple = git.get_latest_remote_semver_tag(parser.parse_git_url(git_rock)).wait()
+            local version_tuple = git.get_latest_remote_semver_tag(git_url).wait()
             ---@cast version_tuple tag_version_tuple
             checkout_spec.rev = version_tuple[1]
         end
