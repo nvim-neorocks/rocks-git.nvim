@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.3](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.5.2...v2.5.3) (2025-03-07)
+
+
+### Bug Fixes
+
+* incorrect plugin name when git shorthand ends in -git ([#83](https://github.com/nvim-neorocks/rocks-git.nvim/issues/83)) ([bf5e798](https://github.com/nvim-neorocks/rocks-git.nvim/commit/bf5e798ebbf857c7f169330e95a647c39dc47763))
+
 ## [2.5.2](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.5.1...v2.5.2) (2024-12-09)
 
 
