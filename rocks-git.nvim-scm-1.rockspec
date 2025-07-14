@@ -7,7 +7,7 @@ package = "rocks-git.nvim"
 version = _MODREV .. _SPECREV
 
 dependencies = {
-    "lua >= 5.1",
+    "lua == 5.1",
     "nvim-nio",
     "rocks.nvim >= 2.12.0",
 }
