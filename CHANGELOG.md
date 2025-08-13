@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.5](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.5.4...v2.5.5) (2025-08-13)
+
+
+### Bug Fixes
+
+* **build:** run in main event-loop ([#87](https://github.com/nvim-neorocks/rocks-git.nvim/issues/87)) ([ab0901c](https://github.com/nvim-neorocks/rocks-git.nvim/commit/ab0901cc1b3ec3c0918a45174803f0b9cde77146))
+
 ## [2.5.4](https://github.com/nvim-neorocks/rocks-git.nvim/compare/v2.5.3...v2.5.4) (2025-07-14)
 
 
