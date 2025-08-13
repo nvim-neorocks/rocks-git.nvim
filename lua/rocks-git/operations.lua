@@ -37,7 +37,7 @@ local function build_if_required(on_progress, on_error, pkg)
     end
     if pkg.build:sub(1, 1) == ":" then
         ---@diagnostic disable-next-line: param-type-mismatch
-        local ok, err = pcall(vim.cmd, pkg.build)
+        local ok, err = pcall(vim.schedule_wrap(vim.cmd), pkg.build)
         if not ok then
             log.error(err)
             on_error(("rocks-git: Failed to build %s"):format(pkg.name))
